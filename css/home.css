@@ -352,6 +352,21 @@ html{
 						}
 					}
 				}
+
+				@-moz-document url-prefix() {
+					div.page:nth-child(2){
+						background-image: url('/img/code.webp');
+					}
+					div.page:nth-child(3){
+						background-image: url('/img/yellowblossoms.webp');
+					}
+					div.page:nth-child(4){
+						background-image: url('/img/flockofbirds.webp');
+					}
+					div.page:nth-child(5){
+						background-image: url('/img/winterbridge.webp');
+					}
+				}
 			}
 			div#awesome.content{
 				cursor: url('/img/awesome/wand.gif'), auto;
