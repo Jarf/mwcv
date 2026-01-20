@@ -12,7 +12,7 @@ $db->execute();
 $db->query('SELECT count FROM visitors LIMIT 1');
 $db->execute();
 $pagevars['visitorcount'] = str_pad($db->fetch()->count, 8, '0', STR_PAD_LEFT);
-$pagevars['css'] = file_get_contents(DIR_CSS . 'home.css');
+$pagevars['css'] = file_get_contents(DIR_CSS . 'home.min.css');
 
 switch ($page) {
 	default:
