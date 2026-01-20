@@ -88,7 +88,7 @@
 	animation-range: 0% 120%;
 }
 @keyframes backgroundchange {
-	0%, 10% {
+	0%, 5% {
 		background-image: url('/img/pinkblossoms.webp');
 		background-position: top;
 	}
