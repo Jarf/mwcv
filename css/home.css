@@ -147,9 +147,6 @@ html{
 		input#modetogglecheck:checked ~ div#container > div#professional.content{
 			transform: translateX(-100vw);
 		}
-		input#modetogglecheck ~ div#container > div#awesome.content{
-			transform: translateX(100vw);
-		}
 		input#modetogglecheck:checked ~ div#container > div#awesome.content{
 			transform: translateX(0);
 		}
@@ -369,6 +366,7 @@ html{
 				}
 			}
 			div#awesome.content{
+				transform: translateX(100vw);
 				cursor: url('/img/awesome/wand.gif'), auto;
 				min-height: calc(100vh - 32px);
 				color: #ffffff;
