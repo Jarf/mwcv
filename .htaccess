@@ -1,0 +1,91 @@
+Options -Indexes
+RewriteEngine On
+
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+Header set Referrer-Policy "no-referrer" 
+Header set X-Content-Type-Options "nosniff" 
+Header set X-Frame-Options "SAMEORIGIN" 
+Header set X-XSS-Protection "1; mode=block" 
+<If "%{HTTP_HOST} == 'cddastory.local'">
+	Header always edit Set-Cookie (.*) $1;HttpOnly;SameSite=strict;Domain=cddastory.local;Path=/;
+</If>
+<Else>
+	Header always edit Set-Cookie (.*) $1;HttpOnly;SameSite=strict;Secure;Domain=cddastory.jarfjam.co.uk;Path=/;
+</Else>
+Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), display-capture=()"
+Header set Content-Security-Policy "default-src 'self'; \
+script-src 'self' challenges.cloudflare.com 'unsafe-inline'; \
+	object-src 'none'; \
+		img-src 'self'; \
+			frame-src challenges.cloudflare.com; \
+				base-uri 'none'; \
+					font-src 'self'; \
+						style-src 'self' 'unsafe-inline'; \
+							connect-src 'self'; \
+								worker-src blob:; \
+									require-trusted-types-for 'script'; \
+										trusted-types default"
+Header append Vary Accept env=REQUEST_image
+Header add Cross-Origin-Embedder-Policy "require-corp"
+Header add Cross-Origin-Opener-Policy "same-origin"
+Header add Cross-Origin-Resource-Policy "same-origin"
+
+# Allow well-known checks
+RewriteRule /\.well-known|^\.well-known - [L]
+# Allow robots.txt
+RewriteRule ^robots.txt - [L]
+# Allow sitemap.xml
+RewriteRule ^robots.xml - [L]
+
+# https redirect
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# MIME types
+AddType image/x-icon .ico
+AddType image/webp .webp
+
+# If WebP accepted and exists
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_URI}  (.*)\.(png)$
+RewriteCond %{DOCUMENT_ROOT}%1.webp -f
+RewriteRule (.+)\.(png)$ $1.webp [T=image/webp,E=REQUEST_image]
+
+# Etag
+FileETag MTime Size
+
+# If WebP accepted and exists
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_URI}  (.*)\.(jpe?g|png)$
+RewriteCond %{DOCUMENT_ROOT}%1.webp -f
+RewriteRule (.+)\.(jpe?g)$ $1.webp [T=image/webp,E=REQUEST_image]
+
+# Redirect requests to index.php
+RewriteCond %{REQUEST_URI} !=/index.php
+RewriteCond %{REQUEST_URI} !/ajax/.* [NC]
+RewriteCond %{REQUEST_URI} !.*\.css$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.js$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.jpe?g$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.png$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.gif$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.svg$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.woff2$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.ico$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.webp$ [NC]
+RewriteCond %{REQUEST_URI} !robots\.txt$ [NC]
+RewriteRule .* /index.php
+
+# Cache
+<IfModule mod_expires.c>
+	ExpiresActive on
+	ExpiresDefault "access plus 2 days"
+	ExpiresByType text/css "access plus 1 year"
+	ExpiresByType text/javascript  "access plus 1 year"
+	ExpiresByType image/png "access plus 1 year"
+	ExpiresByType image/jpeg "access plus 1 year"
+	ExpiresByType image/gif "access plus 1 year"
+	ExpiresByType image/x-icon "access plus 1 year"
+	ExpiresByType image/webp "access plus 1 year"
+	ExpiresByType image/svg+xml "access plus 1 year"
+	ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

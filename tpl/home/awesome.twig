@@ -1,0 +1,24 @@
+<div class="title">
+	<img src="{{constant('SITE_IMG')}}awesome/wizard.gif" alt="wizard" width=80 height=102 loading="lazy"/>
+	<div>
+		<span>Need a web wizard?</span>
+		<h1 class="animatehuerotate">Martin Wadeson</h1>
+		<span>At your service</span>
+	</div>
+	<img src="{{constant('SITE_IMG')}}awesome/wizard.gif" alt="wizard" width=80 height=102 loading="lazy"/>
+</div>
+<hr/>
+<div class="subtitle animatemarquee">
+	<h2 class="animateblink">Web Development is my passion!!!</h3>
+</div>
+<hr/>
+<div class="page">
+	<p>Welcome to my website!</p>
+	<table class="visitorcounter"><tr><td>VISITOR</td>{% for character in visitorcount|split('') %}<td>{{character}}</td>{% endfor %}</tr></table>
+	<p>This page is best viewed with 640 x 480 screen resolution using IE or Netscape Navigator</p>
+	<img src="{{constant('SITE_IMG')}}/awesome/iens.gif" alt="Internet Explorer or Netscape Navigator" width=65 height=50 loading="lazy"/>
+</div>
+<div class="footer">
+	<hr/>
+	<img src="{{constant('SITE_IMG')}}awesome/construction.gif" alt="under construction" width=160 height=200 loading="lazy"/>
+</div>
