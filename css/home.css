@@ -54,6 +54,7 @@
 	opacity: 0;
 	animation: reveal auto;
 	animation-timeline: --main-timeline;
+	animation-duration: 1ms;
 	transition: all 0.3s cubic-bezier(0,1,1,0);
 }
 @keyframes reveal {
@@ -79,6 +80,7 @@
 .animatebackgroundchange {
 	animation: backgroundchange auto;
 	animation-timeline: --main-timeline;
+	animation-duration: 1ms;
 	transition: background-image 1s ease-in;
 	animation-range: 0% 120%;
 }
@@ -217,10 +219,11 @@ html{
 				display: inline-block;
 			}
 			div#professional.content{
+				background-image: url('/img/pinkblossoms.webp');
+				background-position: top;
 				scroll-behavior: smooth;
 				font-family: professional;
-				scroll-timeline-name: --main-timeline;
-				scroll-timeline-axis: y;
+				scroll-timeline: --main-timeline y;
 				color: #ffffff;
 				font-size: 12pt;
 				div.page{

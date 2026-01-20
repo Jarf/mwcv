@@ -16,7 +16,8 @@
 		<meta name="description" content="My CV">
 		<title>Martin Wadeson</title>
 		<meta name="description" content="Experienced web developer and server architect">
-		<link rel="stylesheet" type="text/css" href="/css/home.min.css">
+		<link rel="preload" href="{{constant('SITE_CSS')}}home.min.css" as="style" fetchpriority="high"/>
+		<link rel="stylesheet" type="text/css" href="{{constant('SITE_CSS')}}home.css">
 		<!-- Professional Stuff -->
 		<link rel="preload" href="{{constant('SITE_FONTS')}}Raleway-Medium.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high"/>
 		<link rel="preload" href="{{constant('SITE_IMG')}}pinkblossoms.webp" as="image" type="image/webp" fetchpriority="high">

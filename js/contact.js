@@ -118,3 +118,7 @@ function validateContactForm(){
 contactFormSubmitBtn.addEventListener('click', function(){
 	submitContact();
 });
+
+document.getElementById('contactformtogglechecklabel').addEventListener('click', function(){
+	resetContact();
+})
