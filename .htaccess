@@ -6,11 +6,11 @@ Header set Referrer-Policy "no-referrer"
 Header set X-Content-Type-Options "nosniff" 
 Header set X-Frame-Options "SAMEORIGIN" 
 Header set X-XSS-Protection "1; mode=block" 
-<If "%{HTTP_HOST} == 'cddastory.local'">
-	Header always edit Set-Cookie (.*) $1;HttpOnly;SameSite=strict;Domain=cddastory.local;Path=/;
+<If "%{HTTP_HOST} == 'mwcv.local'">
+	Header always edit Set-Cookie (.*) $1;HttpOnly;SameSite=strict;Domain=mwcv.local;Path=/;
 </If>
 <Else>
-	Header always edit Set-Cookie (.*) $1;HttpOnly;SameSite=strict;Secure;Domain=cddastory.jarfjam.co.uk;Path=/;
+	Header always edit Set-Cookie (.*) $1;HttpOnly;SameSite=strict;Secure;Domain=martinwadeson.com;Path=/;
 </Else>
 Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), display-capture=()"
 Header set Content-Security-Policy "default-src 'self'; \

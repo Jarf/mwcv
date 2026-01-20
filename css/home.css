@@ -219,7 +219,8 @@ html{
 			div#professional.content{
 				scroll-behavior: smooth;
 				font-family: professional;
-				scroll-timeline: --main-timeline y;
+				scroll-timeline-name: --main-timeline;
+				scroll-timeline-axis: y;
 				color: #ffffff;
 				font-size: 12pt;
 				div.page{

@@ -89,10 +89,10 @@ function submitError(messageNo){
 			el.removeAttribute('disabled');
 		});
 		contactFormToggle.removeAttribute('disabled');
-		contactFormToggle.checked = false;
 		contactFormSubmitBtn.textContent = 'Send';
 		if(messageNo === 3){
 			contactForm.reset();
+			contactFormToggle.checked = false;
 			document.getElementById('professional').scrollTo(0, 0);
 		}
 	}, 1500);
@@ -114,3 +114,7 @@ function validateContactForm(){
 	}
 	return valid;
 }
+
+contactFormSubmitBtn.addEventListener('click', function(){
+	submitContact();
+});
