@@ -41,6 +41,10 @@ RewriteRule ^robots.xml - [L]
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# www redirect
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+
 # MIME types
 AddType image/x-icon .ico
 AddType image/webp .webp
