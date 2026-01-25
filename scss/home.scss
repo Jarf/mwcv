@@ -351,7 +351,7 @@ html{
 					}
 				}
 
-				@-moz-document url-prefix() {
+				@supports not (animation-timeline: scroll()) {
 					div.page:nth-child(2){
 						background-image: url('/img/code.webp');
 					}
