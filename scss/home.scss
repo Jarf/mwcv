@@ -55,6 +55,9 @@
 	@-moz-document url-prefix() {
 		opacity: 1;
 	}
+	@supports not (animation-timeline: --main-timeline) {
+		opacity: 1;
+	}
 	animation: reveal auto;
 	animation-timeline: --main-timeline;
 	animation-duration: 1ms;

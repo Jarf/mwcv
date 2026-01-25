@@ -44,6 +44,10 @@
 @-moz-document url-prefix() {
   .animaterevealhide {
     opacity: 1; } }
+  @supports not (animation-timeline: --main-timeline) {
+    .animaterevealhide {
+      opacity: 1; } }
+
 @keyframes reveal {
   0% {
     transform: translateY(-25vh);
