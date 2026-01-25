@@ -229,6 +229,8 @@ html{
 					top: 0;
 					left: 0;
 					height: calc(200vh - 32px);
+					background-repeat: no-repeat;
+					background-size: cover;
 					div.content{
 						display: flex;
 						position: relative;

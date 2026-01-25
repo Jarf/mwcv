@@ -172,7 +172,9 @@ html body {
       html body div#container div#professional.content div.page {
         top: 0;
         left: 0;
-        height: calc(200vh - 32px); }
+        height: calc(200vh - 32px);
+        background-repeat: no-repeat;
+        background-size: cover; }
         html body div#container div#professional.content div.page div.content {
           display: flex;
           position: relative;
