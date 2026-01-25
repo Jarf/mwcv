@@ -25,6 +25,8 @@ define('DB_TYPE', 'mysql');
 
 define('TURNSTILE_KEY', '0x4AAAAAACNZ0IxxkHtnfVr_');
 
+define('CACHEBUSTER', substr(trim(file_get_contents(DIR_ROOT . '.git/refs/heads/master')),0,6));
+
 $dev = 0;
 
 if(isset($_SERVER['SERVER_NAME'])){

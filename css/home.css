@@ -256,7 +256,7 @@ html body {
         cursor: pointer; }
       html body div#container div#professional.content div.page:nth-child(5) div.content div.text {
         animation-range: 80% 120%; }
-      @supports not (animation-timeline: scroll()) {
+      @supports not (animation-timeline: --main-timeline) {
         html body div#container div#professional.content div.page:nth-child(2) {
           background-image: url("/img/code.webp"); }
         html body div#container div#professional.content div.page:nth-child(3) {
