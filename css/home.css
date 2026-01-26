@@ -36,17 +36,14 @@
   100% {
     transform: translateX(-100%); } }
 .animaterevealhide {
-  opacity: 0;
-  animation: reveal auto;
-  animation-timeline: --main-timeline;
-  animation-duration: 1ms;
-  transition: all 0.3s cubic-bezier(0, 1, 1, 0); }
-@-moz-document url-prefix() {
-  .animaterevealhide {
-    opacity: 1; } }
-  @supports not (animation-timeline: --main-timeline) {
+  opacity: 1; }
+  @supports (animation-timeline: --main-timeline) {
     .animaterevealhide {
-      opacity: 1; } }
+      opacity: 0;
+      animation: reveal auto;
+      animation-timeline: --main-timeline;
+      animation-duration: 1ms;
+      transition: all 0.3s cubic-bezier(0, 1, 1, 0); } }
 
 @keyframes reveal {
   0% {
@@ -61,12 +58,13 @@
     opacity: 0;
     transform: translateY(25vh);
     scale: 0.1; } }
-.animatebackgroundchange {
-  animation: backgroundchange auto;
-  animation-timeline: --main-timeline;
-  animation-duration: 1ms;
-  transition: background-image 1s ease-in;
-  animation-range: 0% 120%; }
+@supports (animation-timeline: --main-timeline) {
+  .animatebackgroundchange {
+    animation: backgroundchange auto;
+    animation-timeline: --main-timeline;
+    animation-duration: 1ms;
+    transition: background-image 1s ease-in;
+    animation-range: 0% 120%; } }
 
 @keyframes backgroundchange {
   0%, 5% {
