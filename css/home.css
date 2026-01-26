@@ -259,6 +259,8 @@ html body {
       html body div#container div#professional.content div.page:nth-child(5) div.content div.text {
         animation-range: 80% 120%; }
       @supports not (animation-timeline: --main-timeline) {
+        html body div#container div#professional.content div.page:nth-child(1) {
+          background-image: url("/img/pinkblossoms.webp"); }
         html body div#container div#professional.content div.page:nth-child(2) {
           background-image: url("/img/code.webp"); }
         html body div#container div#professional.content div.page:nth-child(3) {
@@ -268,6 +270,8 @@ html body {
         html body div#container div#professional.content div.page:nth-child(5) {
           background-image: url("/img/winterbridge.webp"); } }
 @-moz-document url-prefix() {
+  html body div#container div#professional.content div.page:nth-child(1) {
+    background-image: url("/img/pinkblossoms.webp"); }
   html body div#container div#professional.content div.page:nth-child(2) {
     background-image: url("/img/code.webp"); }
   html body div#container div#professional.content div.page:nth-child(3) {

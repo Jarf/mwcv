@@ -354,6 +354,9 @@ html{
 				}
 
 				@supports not (animation-timeline: --main-timeline) {
+					div.page:nth-child(1){
+						background-image: url('/img/pinkblossoms.webp');
+					}
 					div.page:nth-child(2){
 						background-image: url('/img/code.webp');
 					}
@@ -368,6 +371,9 @@ html{
 					}
 				}
 				@-moz-document url-prefix() {
+					div.page:nth-child(1){
+						background-image: url('/img/pinkblossoms.webp');
+					}
 					div.page:nth-child(2){
 						background-image: url('/img/code.webp');
 					}
