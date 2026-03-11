@@ -45,10 +45,9 @@ div#cube{
     position: absolute;
     width: 200px;
     height: 200px;
-    border: 1px solid #555;
+    border: 1px solid $neon-color;
     background-size: cover; /* Ensures the image covers the face */
     background-position: center; /* Centers the image on the face */
-    border-color: $neon-color;
   }
 
   /* Individual Faces with Background Images and Positions */
@@ -102,7 +101,7 @@ div#grid{
   .scene {
     position: fixed;
     inset: 0;
-    perspective: 800px;
+    perspective: 1200px;
   }
 
   .grid {
