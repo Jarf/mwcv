@@ -14,10 +14,10 @@ Header set X-XSS-Protection "1; mode=block"
 </Else>
 Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), display-capture=()"
 Header set Content-Security-Policy "default-src 'self'; \
-script-src 'self' challenges.cloudflare.com 'sha256-9jtjNGPjDsL5pafVmutYFkzeHH6NTkB3WAEUGqqKhSI=' 'sha256-fUhGYFbcgPf5yTdZcGbOIVjaaHQPiLUYCCQOBSNZF5w=' 'sha256-Vm0MWEc7ZXkCvNxmSFI5ZezAU7g1NraSI/qzvykrEwE='; \
+script-src 'self'; \
 	object-src 'none'; \
 		img-src 'self'; \
-			frame-src challenges.cloudflare.com; \
+			frame-src 'none'; \
 				base-uri 'none'; \
 					font-src 'self'; \
 						style-src 'self' 'sha256-vcx8PYQ24ryrOLu1iWAwOjtpAs05SjyD122B7MLnRlo='; \
