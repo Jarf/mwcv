@@ -6,6 +6,7 @@
 
 $neon-color: #00ff00;
 $bg-color: #000000;
+$fg-color: #ffffff;
 
 body {
   font-family: terminus;
@@ -48,6 +49,7 @@ div#cube{
     border: 1px solid $neon-color;
     background-size: cover; /* Ensures the image covers the face */
     background-position: center; /* Centers the image on the face */
+    box-shadow: 0 0 8px 0 $neon-color;
   }
 
   /* Individual Faces with Background Images and Positions */
@@ -139,7 +141,7 @@ div#grid{
 
 div#content{
   display: grid;
-  color: $neon-color;
+  color: $fg-color;
   position: fixed;
   top: 0;
   left: 0;
@@ -150,18 +152,20 @@ div#content{
   align-items: center;
   div#contentBody{
     display: grid;
-    width: 320px;
-    margin-left: calc(50% - 160px);
+    width: 240px;
+    margin-left: calc(50% - 120px);
+    backdrop-filter: blur(2px) saturate(0%);
+    text-shadow: 1px 1px 24px $fg-color;
     div#header{
       font-weight: bold;
       font-size: 24px;
-      text-shadow: 1px 1px 24px $neon-color;
     }
     div#links{
       a:link, a:visited, a:hover, a:active, b{
+        font-size: 16px;
         padding: 4px;
         display: block;
-        color: $neon-color;
+        color: $fg-color;
         text-decoration: none;
       }
     }
@@ -169,7 +173,8 @@ div#content{
       margin: 8px auto;
       min-width: 200px;
       width: 25%;
-      border: 1px solid $neon-color;
+      border: 1px solid $fg-color;
+      box-shadow: 0 0 24px 2px $fg-color;
     }
   }
 }
