@@ -13,64 +13,52 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		{%include('favico.twig')%}
-		<meta name="description" content="My CV">
+		<meta name="description" content="Personal Website of Martin Wadeson">
 		<title>Martin Wadeson</title>
 		<meta name="description" content="Experienced web developer and server architect">
-		<link rel="preload" href="{{constant('SITE_CSS')}}home.min.css?v={{constant('CACHEBUSTER')}}" as="style" fetchpriority="high"/>
-		<link rel="stylesheet" type="text/css" href="{{constant('SITE_CSS')}}home.min.css?v={{constant('CACHEBUSTER')}}">
-		<!-- Professional Stuff -->
-		<link rel="preload" href="{{constant('SITE_FONTS')}}Raleway-Medium.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high"/>
-		<link rel="preload" href="{{constant('SITE_IMG')}}pinkblossoms.webp" as="image" type="image/webp" fetchpriority="high">
-		<link rel="preload" href="{{constant('SITE_IMG')}}code.webp" as="image" type="image/webp" fetchpriority="low">
-		<link rel="preload" href="{{constant('SITE_IMG')}}yellowblossoms.webp" as="image" type="image/webp" fetchpriority="low">
-		<link rel="preload" href="{{constant('SITE_IMG')}}flockofbirds.webp" as="image" type="image/webp" fetchpriority="low">
-		<link rel="preload" href="{{constant('SITE_IMG')}}winterbridge.webp" as="image" type="image/webp" fetchpriority="low">
-		<!-- Awesome Stuff -->
-		<link rel="preload" href="{{constant('SITE_FONTS')}}ComicSans.woff2" as="font" type="font/woff2" crossorigin fetchpriority="low"/>
-		<!-- Turnstile -->
-		<link rel="preconnect" href="https://challenges.cloudflare.com">
-		<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+		<link rel="preload" href="{{constant('SITE_CSS')}}main.css?v={{constant('CACHEBUSTER')}}" as="style" fetchpriority="high"/>
+		<link rel="preload" href="{{constant('SITE_FONTS')}}terminus.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high"/>
+		<link rel="stylesheet" type="text/css" href="{{constant('SITE_CSS')}}main.css?v={{constant('CACHEBUSTER')}}">
 	</head>
 	<body>
-		<input id="modetogglecheck" type="checkbox"/>
-		<div id="header">
-			<span>martinwadeson.com</span>
-			<span id="modetoggle">
-				<label class="toggle" for="modetogglecheck">
-					<span class="slider"></span>
-				</label>
-			</span>
-		</div>
 		<div id="container">
-			<div id="professional" class="content animatebackgroundchange">
-				{%include('professional.twig')%}
+			<div id="grid">
+				<div class="scene">
+					<div class="grid"></div>
+				</div>
 			</div>
-			<div id="awesome" class="content">
-				{%include('awesome.twig')%}
+			<div id="cube">
+				<div class="scene">
+					<div class="cube">
+						<div class="face front"></div>
+						<div class="face back"></div>
+						<div class="face right"></div>
+						<div class="face left"></div>
+						<div class="face top"></div>
+						<div class="face bottom"></div>
+					</div>
+				</div>
+			</div>
+			<div id="content" role="main">
+				<div id="contentBody">
+					<div id="header">
+						Martin Wadeson
+					</div>
+					<hr/>
+					<div id="links">
+						<b>Personal Projects</b>
+						<a href="https://cddastory.jarfjam.co.uk/">CDDA Story</a>
+						<a href="https://arenadekt.jarfjam.co.uk/">ArenaDekt</a>
+						<hr/>
+						<b>Socials</b>
+						<a href="https://github.com/Jarf">GitHub</a>
+						<a href="https://www.linkedin.com/in/martin-wadeson-a936a922/">LinkedIn</a>
+					</div>
+					<hr/>
+				</div>
+			</div>
+			<div id="counter">
+				You are visitor {{visitorcount}}
 			</div>
 		</div>
-		<input id="contactformtogglecheck" type="checkbox"/>
-		<div id="contactcontainer">
-			<form method="POST" id="contactform">
-				<div id="contactformheader">
-					<h4>Contact</h4><label id="contactformclose" for="contactformtogglecheck"><img height="16" width="16" src="{{constant('SITE_IMG')}}close.svg"/></label>
-				</div>
-				<div>
-					<label for="contactformname">Name:</label>
-					<input id="contactformname" type="text" name="name" disabled/>
-				</div>
-				<div>
-					<label for="contactformemail">Email:</label>
-					<input id="contactformemail" type="email" name="contact" disabled/>
-				</div>
-				<div>
-					<label for="contactformmessage">Message:</label>
-					<textarea id="contactformmessage" rows="5" name="message" disabled></textarea>
-				</div>
-				<div id="turnstile-container" data-sitekey="{{constant('TURNSTILE_KEY')}}"></div>
-				<button id="contactformsubmit" type="button" disabled>Send</button>
-			</form>
-		</div>
-	</body>
-	<script src="{{constant('SITE_JS')}}contact.min.js?v={{constant('CACHEBUSTER')}}" defer></script>
 </html>

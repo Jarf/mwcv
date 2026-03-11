@@ -76,6 +76,7 @@ RewriteCond %{REQUEST_URI} !.*\.svg$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.woff2$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.ico$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.webp$ [NC]
+RewriteCond %{REQUEST_URI} !/ico/site\.webmanifest$ [NC]
 RewriteCond %{REQUEST_URI} !robots\.txt$ [NC]
 RewriteRule .* /index.php
 

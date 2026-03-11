@@ -6,11 +6,9 @@ define('DIR_CLASSES', DIR_ROOT . 'classes/');
 define('DIR_TPL', DIR_ROOT . 'tpl/');
 define('DIR_CACHE', false);
 define('DIR_CSS', DIR_ROOT . 'css/');
-define('DIR_JS', DIR_ROOT . 'js/');
 define('DIR_IMG', DIR_ROOT . 'img/');
 
 define('SITE_CSS', '/css/');
-define('SITE_JS', '/js/');
 define('SITE_VENDOR', '/vendor/');
 define('SITE_AJAX', '/ajax/');
 define('SITE_ICO', '/ico/');
@@ -22,8 +20,6 @@ define('DB_PASS', 'WNPKCkSGOnIw5DJ4');
 define('DB_NAME', 'cv');
 define('DB_HOST', 'localhost');
 define('DB_TYPE', 'mysql');
-
-define('TURNSTILE_KEY', '0x4AAAAAACNZ0IxxkHtnfVr_');
 
 define('CACHEBUSTER', substr(trim(file_get_contents(DIR_ROOT . '.git/refs/heads/master')),0,6));
 
