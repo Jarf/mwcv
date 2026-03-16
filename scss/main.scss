@@ -199,7 +199,7 @@ div#scroller{
   color: $neon-color;
   white-space:nowrap;
   z-index: -1;
-  animation: scroll 10s linear infinite;
+  animation: scroll 30s linear infinite;
   text-align: center;
 
   span {
@@ -211,8 +211,8 @@ div#scroller{
   }
 
   @keyframes scroll {
-    from { left: 100%; }
-    to   { left: -100%; }
+    from { left: 100vw; }
+    to   { left: calc(-100% - 360px); }
   }
 
   @keyframes wave {
