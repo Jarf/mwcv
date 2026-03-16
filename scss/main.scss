@@ -100,13 +100,13 @@ div#cube{
 
 div#grid{
 
-  .scene {
+  div.scene {
     position: fixed;
     inset: 0;
     perspective: 1200px;
   }
 
-  .grid {
+  div.grid {
     position: absolute;
     width: 200%;
     height: 200%;
@@ -183,8 +183,49 @@ div#counter{
   color: $neon-color;
   position: fixed;
   top: 0;
-  height: 130px;
+  height: 36px;
   text-align: center;
-  line-height: 130px;
+  line-height: 36px;
   width: 100vw;
+}
+
+div#scroller{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 30%;
+  background-color: $bg-color;
+  color: $neon-color;
+  white-space:nowrap;
+  z-index: -1;
+  animation: scroll 10s linear infinite;
+  text-align: center;
+
+  span {
+    display: inline-block;
+    animation: wave 4s ease-in-out infinite;
+    position: relative;
+    top: 50%;
+    font-size: 32px;
+  }
+
+  @keyframes scroll {
+    from { left: 100%; }
+    to   { left: -100%; }
+  }
+
+  @keyframes wave {
+    0%   { transform: translateY(-100%); }
+    50% { transform: translateY(100%); }
+    100%   { transform: translateY(-100%); }
+  }
+
+}
+$letters: 28;
+$step: 0.08s;
+@for $i from 1 through $letters {
+  div#scroller span:nth-child(#{$i}) {
+    animation-delay: $i * $step;
+  }
 }

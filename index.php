@@ -19,7 +19,7 @@ switch ($page) {
 		break;
 }
 
-$loader = new \Twig\Loader\FilesystemLoader(array(DIR_TPL, DIR_TPL . 'home/', DIR_TPL . 'include/'));
+$loader = new \Twig\Loader\FilesystemLoader(array(DIR_TPL, DIR_TPL . 'include/'));
 $twig = new \Twig\Environment($loader, array(
 	'cache' => DIR_CACHE,
 	'debug' => (bool) ISDEV
