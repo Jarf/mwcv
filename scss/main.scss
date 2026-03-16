@@ -28,8 +28,9 @@ div#cube{
     position: relative;
     width: 200px;
     height: 200px;
+    left: calc(50vw - 100px);
+    top: calc(50vh - 100px);
     perspective: 600px;
-    animation: x 7s linear infinite alternate, y 5s linear infinite alternate;
   }
 
   /* Cube Container */
@@ -50,6 +51,7 @@ div#cube{
     background-size: cover; /* Ensures the image covers the face */
     background-position: center; /* Centers the image on the face */
     box-shadow: 0 0 8px 0 $neon-color;
+    backdrop-filter: blur(2px) saturate(0%);
   }
 
   /* Individual Faces with Background Images and Positions */
@@ -85,16 +87,6 @@ div#cube{
     to {
       transform: rotateY(360deg) rotateX(360deg);
     }
-  }
-
-  @keyframes x {
-    from { left: 0; }
-    to { left: calc(100% - 200px); }
-  }
-
-  @keyframes y {
-    from { top: 0; }
-    to { top: calc(100% - 200px); }
   }
 }
 
@@ -155,7 +147,6 @@ div#content{
     display: grid;
     width: 240px;
     margin-left: calc(50% - 120px);
-    backdrop-filter: blur(2px) saturate(0%);
     text-shadow: 1px 1px 24px $fg-color;
     div#header{
       font-weight: bold;
@@ -170,17 +161,10 @@ div#content{
         text-decoration: none;
       }
       a:hover{
-        color: $bg-color;
-        background-color: $fg-color;
+        color: $neon-color;
         font-weight: bold;
+        text-shadow: 1px 1px 24px $neon-color;
       }
-    }
-    hr{
-      margin: 8px auto;
-      min-width: 200px;
-      width: 25%;
-      border: 1px solid $fg-color;
-      box-shadow: 0 0 24px 2px $fg-color;
     }
   }
 }
