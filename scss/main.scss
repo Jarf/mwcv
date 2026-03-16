@@ -47,10 +47,10 @@ div#cube{
     position: absolute;
     width: 200px;
     height: 200px;
-    border: 1px solid $neon-color;
+    border: 1px solid $fg-color;
     background-size: cover; /* Ensures the image covers the face */
     background-position: center; /* Centers the image on the face */
-    box-shadow: 0 0 8px 0 $neon-color;
+    box-shadow: 0 0 8px 0 $fg-color;
     backdrop-filter: blur(2px) saturate(0%);
   }
 
