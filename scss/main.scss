@@ -168,6 +168,11 @@ div#content{
         color: $fg-color;
         text-decoration: none;
       }
+      a:hover{
+        color: $bg-color;
+        background-color: $fg-color;
+        font-weight: bold;
+      }
     }
     hr{
       margin: 8px auto;
@@ -193,13 +198,12 @@ div#scroller{
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
   height: 30%;
   background-color: $bg-color;
   color: $neon-color;
   white-space:nowrap;
   z-index: -1;
-  animation: scroll 30s linear infinite;
+  animation: scroll 15s linear infinite;
   text-align: center;
 
   span {
@@ -212,7 +216,7 @@ div#scroller{
 
   @keyframes scroll {
     from { left: 100vw; }
-    to   { left: calc(-100% - 360px); }
+    to   { left: -664px; }
   }
 
   @keyframes wave {
