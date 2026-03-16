@@ -39,7 +39,12 @@ div#cube{
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    animation: rotate-cube 12s infinite linear;
+    animation: rotate-cube 24s infinite linear;
+    background-image: url('/img/spaceinvader.svg');
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
   }
 
   /* General Face Styling */
@@ -147,7 +152,7 @@ div#content{
     display: grid;
     width: 240px;
     margin-left: calc(50% - 120px);
-    text-shadow: 1px 1px 24px $fg-color;
+    text-shadow: 1px 1px 2px $bg-color;
     div#header{
       font-weight: bold;
       font-size: 24px;
@@ -163,7 +168,6 @@ div#content{
       a:hover{
         color: $neon-color;
         font-weight: bold;
-        text-shadow: 1px 1px 24px $neon-color;
       }
     }
   }
