@@ -122,7 +122,7 @@ div#grid{
 
     background-size: 80px 80px;
 
-    animation: gridMove 30s linear infinite;
+    animation: gridMove 7s linear infinite;
 
     box-shadow:
       0 0 20px $neon-color,
@@ -134,7 +134,7 @@ div#grid{
       background-position: 0 0, 0 0;
     }
     to {
-      background-position: 0 100%, 100% 0;
+      background-position: 0 100%, 0 0;
     }
   }
 }
