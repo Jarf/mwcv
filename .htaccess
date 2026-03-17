@@ -14,7 +14,7 @@ Header set X-XSS-Protection "1; mode=block"
 </Else>
 Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), display-capture=()"
 Header set Content-Security-Policy "default-src 'self'; \
-script-src 'self'; \
+script-src 'self' 'sha256-9jtjNGPjDsL5pafVmutYFkzeHH6NTkB3WAEUGqqKhSI=' atornblad.se; \
 	object-src 'none'; \
 		img-src 'self'; \
 			frame-src 'none'; \
@@ -76,6 +76,7 @@ RewriteCond %{REQUEST_URI} !.*\.svg$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.woff2$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.ico$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.webp$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.mod$ [NC]
 RewriteCond %{REQUEST_URI} !/ico/site\.webmanifest$ [NC]
 RewriteCond %{REQUEST_URI} !robots\.txt$ [NC]
 RewriteRule .* /index.php
