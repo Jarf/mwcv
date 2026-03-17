@@ -222,3 +222,85 @@ $step: 0.08s;
     animation-delay: $i * $step;
   }
 }
+
+div#starfield{
+  @function stars($count) {
+    $stars: ();
+    @for $i from 1 through $count {
+      $x: random(2000) * 1px;
+      $y: random(2000) * 1px;
+      $stars: append($stars, #{$x} #{$y} $fg-color, comma);
+    }
+    @return $stars;
+  }
+
+  $stars-small: stars(700);
+  $stars-medium: stars(200);
+  $stars-big: stars(100);
+  %star-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+  }
+  $travel: 2000px;
+  .stars {
+    @extend %star-layer;
+    box-shadow: $stars-small;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: $travel;
+      width: 1px;
+      height: 1px;
+      box-shadow: $stars-small;
+    }
+
+    animation: animStar 50s linear infinite;
+  }
+  .stars2 {
+    @extend %star-layer;
+    width: 2px;
+    height: 2px;
+    box-shadow: $stars-medium;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: $travel;
+      width: 2px;
+      height: 2px;
+      box-shadow: $stars-medium;
+    }
+
+    animation: animStar 100s linear infinite;
+  }
+  .stars3 {
+    @extend %star-layer;
+    width: 3px;
+    height: 3px;
+    box-shadow: $stars-big;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: $travel;
+      width: 3px;
+      height: 3px;
+      box-shadow: $stars-big;
+    }
+
+    animation: animStar 150s linear infinite;
+  }
+  @keyframes animStar {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-$travel);
+    }
+  }
+}

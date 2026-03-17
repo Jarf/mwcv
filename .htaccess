@@ -14,7 +14,7 @@ Header set X-XSS-Protection "1; mode=block"
 </Else>
 Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), display-capture=()"
 Header set Content-Security-Policy "default-src 'self'; \
-script-src 'self'; \
+script-src 'self' 'sha256-9jtjNGPjDsL5pafVmutYFkzeHH6NTkB3WAEUGqqKhSI='; \
 	object-src 'none'; \
 		img-src 'self'; \
 			frame-src 'none'; \
