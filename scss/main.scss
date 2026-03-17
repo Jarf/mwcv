@@ -109,7 +109,6 @@ div#grid{
     height: 200%;
     left: -50%;
     bottom: -50%;
-    backdrop-filter: blur(3px);
     
     transform-style: preserve-3d;
     transform: rotateX(70deg);
@@ -194,7 +193,7 @@ div#scroller{
   z-index: -1;
   animation: scroll 15s linear infinite;
   text-align: center;
-  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.6));
+  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.2));
 
   span {
     display: inline-block;
