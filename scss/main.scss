@@ -237,16 +237,19 @@ div#content{
           transform: rotate(180deg);
         }
         @keyframes textAppear{
-          from{
+          0%{
             filter: blur(4px) hue-rotate(1080deg);
             color: $neon-color;
             border-color: $neon-color;
             opacity: 0;
           }
-          to{
+          99%{
             filter: blur(0) hue-rotate(0);
             color: $fg-color;
             opacity: 1;
+          }
+          100%{
+            filter: none;
           }
         }
         p{
