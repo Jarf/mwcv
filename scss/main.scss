@@ -114,6 +114,7 @@ div#grid{
     
     transform-style: preserve-3d;
     transform: rotateX(70deg);
+    will-change: background-position;
 
     background-image:
       linear-gradient($neon-color 1px, transparent 1px),
