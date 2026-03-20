@@ -23,6 +23,9 @@ body {
 div#cube{
   width: 100vw;
   height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
   .scene {
     position: relative;
@@ -40,7 +43,6 @@ div#cube{
     position: relative;
     transform-style: preserve-3d;
     animation: rotate-cube 24s infinite linear;
-    background-image: url('/img/spaceinvader.svg');
     background-size: 75%;
     background-repeat: no-repeat;
     background-position: center;
@@ -56,7 +58,7 @@ div#cube{
     background-size: cover; /* Ensures the image covers the face */
     background-position: center; /* Centers the image on the face */
     box-shadow: 0 0 8px 0 $fg-color;
-    backdrop-filter: blur(2px) saturate(0%);
+    backdrop-filter: saturate(0%) blur(2px);
   }
 
   /* Individual Faces with Background Images and Positions */
@@ -119,7 +121,7 @@ div#grid{
 
     background-size: 80px 80px;
 
-    animation: gridMove 7s linear infinite;
+    animation: gridMove 20s linear infinite;
 
     box-shadow:
       0 0 20px $neon-color,
@@ -136,6 +138,52 @@ div#grid{
   }
 }
 
+div#ansi{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  div.scene{
+    position: relative;
+    span{
+      color: $fg-color;
+      font-size: 14px;
+      display: inline-block;
+      width: 10px;
+      height: 14px;
+      text-shadow: 1px 1px 10px $neon-color, 1px 1px 10px $neon-color;
+    }
+    div.clear{
+      clear: both;
+    }
+    @keyframes textEffect{
+      0% {
+        color: $fg-color;
+        text-shadow: 1px 1px 10px $neon-color, 1px 1px 10px $neon-color;
+      }
+      50% {
+        color: $neon-color;
+        text-shadow: 1px 1px 10px $fg-color, 1px 1px 10px $fg-color;
+      }
+      100% {
+        color: $fg-color;
+        text-shadow: 1px 1px 10px $neon-color, 1px 1px 10px $neon-color;
+      }
+
+    }
+    $spans: 130;
+    @for $i from 1 through $spans{
+      span:nth-child(#{$i}){
+        animation: textEffect 4s linear infinite ($i * 0.01) + s;
+      }
+    }
+  }
+}
+
 div#content{
   display: grid;
   color: $fg-color;
@@ -147,35 +195,89 @@ div#content{
   overflow: hidden;
   text-align: center;
   align-items: center;
-  div#contentBody{
-    display: grid;
-    width: 240px;
-    margin-left: calc(50% - 120px);
-    text-shadow: 1px 1px 2px $bg-color;
-    div#header{
-      font-weight: bold;
-      font-size: 24px;
-    }
-    div#links{
-      a:link, a:visited, a:hover, a:active, b{
-        font-size: 16px;
-        padding: 4px;
+  div#pagesContainer{
+    position: relative;
+    // display: none;
+    top: 0;
+    transition: all 0.5s ease-in-out 0s;
+    div.pageContainer{
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      div.pageContent{
         display: block;
-        color: $fg-color;
-        text-decoration: none;
-      }
-      a:hover{
-        color: $neon-color;
-        font-weight: bold;
+        min-width: 240px;
+        max-width: 75%;
+        background-color: rgba(0,0,0,0.5);
+        text-align: center;
+        padding: 16px;
+        border: 4px $fg-color solid;
+        label{
+          display: block;
+          width: 0; 
+          height: 0; 
+          margin: 0 auto;
+          cursor: pointer;
+        }
+        label.arrowDown{
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+          border-top: 20px solid $fg-color;
+        }
+        label.arrowUp{
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+          border-top: 20px solid $fg-color;
+          transform: rotate(180deg);
+        }
+        @keyframes textAppear{
+          from{
+            filter: blur(4px) hue-rotate(1080deg);
+            color: $neon-color;
+            border-color: $neon-color;
+            opacity: 0;
+          }
+          to{
+            filter: blur(0) hue-rotate(0);
+            color: $fg-color;
+            opacity: 1;
+          }
+        }
+        p{
+          text-shadow: -1px -1px 0 $bg-color, 1px -1px 0 $bg-color, -1px 1px 0 $bg-color, 1px 1px 0 $bg-color;
+        }
+        p.header{
+          font-size: 24px;
+          font-weight: bold;
+          text-align: left;
+          margin: 0 0 0 8px;
+        }
       }
     }
   }
+  input{
+    display: none;
+  }
+  $pages: 3;
+  @for $i from 1 through $pages{
+    input#page#{$i}:checked ~ div#pagesContainer{
+      top: calc(#{$i - 1} * -100vh);
+      div.page#{$i} div.pageContent{
+        animation: textAppear 2s ease-out;
+      }
+    }
+  }
+
 }
 
 div#counter{
   color: $neon-color;
   position: fixed;
   top: 0;
+  left: 0;
   height: 36px;
   text-align: center;
   line-height: 36px;
