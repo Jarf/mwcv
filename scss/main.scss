@@ -58,7 +58,7 @@ div#cube{
     background-size: cover; /* Ensures the image covers the face */
     background-position: center; /* Centers the image on the face */
     box-shadow: 0 0 8px 0 $fg-color;
-    backdrop-filter: saturate(0%) blur(2px);
+    backdrop-filter: saturate(0%);
   }
 
   /* Individual Faces with Background Images and Positions */
