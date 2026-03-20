@@ -180,7 +180,7 @@ div#ansi{
       }
 
     }
-    $spans: 130;
+    $spans: 107;
     @for $i from 1 through $spans{
       span:nth-child(#{$i}){
         animation: textEffect 4s linear infinite ($i * 0.01) + s;
