@@ -47,6 +47,7 @@ div#cube{
     background-repeat: no-repeat;
     background-position: center;
     image-rendering: pixelated;
+    will-change: transform;
   }
 
   /* General Face Styling */
@@ -159,6 +160,7 @@ div#ansi{
       width: 10px;
       height: 14px;
       text-shadow: 1px 1px 10px $neon-color, 1px 1px 10px $neon-color;
+      will-change: color, text-shadow;
     }
     div.clear{
       clear: both;
