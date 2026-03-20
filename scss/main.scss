@@ -314,6 +314,7 @@ div#scroller{
     position: relative;
     top: 50%;
     font-size: 32px;
+    will-change: transform;
   }
 
   @keyframes scroll {
