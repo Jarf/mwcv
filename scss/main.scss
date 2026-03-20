@@ -122,6 +122,8 @@ div#grid{
     background-size: 80px 80px;
 
     animation: gridMove 20s linear infinite;
+    animation-fill-mode: backwards;
+    animation-delay: 0s;
 
     box-shadow:
       0 0 20px $neon-color,
