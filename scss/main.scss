@@ -230,12 +230,12 @@ div#content{
         display: block;
         min-width: 240px;
         max-width: 75%;
-        max-height: calc(100% - 80px);
+        max-height: calc(100vh - 80px);
         background-color: rgba(0,0,0,0.5);
         text-align: center;
         padding: 16px;
         border: 4px $fg-color solid;
-        overflow: hidden;
+        overflow: hidden auto;
         will-change: filter, color, border-color, opacity;
         label{
           display: block;
