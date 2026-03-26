@@ -15,7 +15,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100dvh;
   background-color: $bg-color;
   margin: 0;
   overflow: hidden;
@@ -35,7 +35,7 @@ body {
 
 div#cube{
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   position: fixed;
   top: 0;
   left: 0;
@@ -159,7 +159,7 @@ div#ansi{
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -208,7 +208,7 @@ div#content{
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   text-align: center;
   align-items: center;
@@ -219,7 +219,7 @@ div#content{
     transition: top 0.5s ease-in-out 0s;
     div.pageContainer{
       width: 100vw;
-      height: 100vh;
+      height: 100dvh;
       display: flex;
       overflow: hidden;
       align-items: center;
@@ -229,7 +229,7 @@ div#content{
         display: block;
         min-width: 240px;
         max-width: 75%;
-        max-height: calc(100vh - 80px);
+        max-height: calc(100dvh - 80px);
         background-color: rgba(0,0,0,0.5);
         text-align: center;
         padding: 16px;
@@ -366,7 +366,7 @@ div#content{
   $pages: 3;
   @for $i from 1 through $pages{
     input#page#{$i}:checked ~ div#pagesContainer{
-      top: calc(#{$i - 1} * -100vh);
+      top: calc(#{$i - 1} * -100dvh);
       div.page#{$i} div.pageContent{
         animation: textAppear 2s ease-out;
       }
