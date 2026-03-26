@@ -301,8 +301,11 @@ div#content{
           transition: left 0.5s ease-in-out 0s;
         }
         div#showcasePro > div:nth-child(2) > div > img{
-            background-color: #011381;
-          }
+          background-color: #011381;
+        }
+        div#showcasePer > div > div > img{
+          padding: 4px;
+        }
         div.showcase{
           display: flex;
           flex-direction: row;
@@ -365,13 +368,20 @@ div#content{
             left: calc(#{$i - 1} * (-75vw - 32px));
           }
         }
+        div#socialsContainer{
+          margin-top: 16px;
+          a{
+            padding: 8px;
+            display: inline-block;
+          }
+        }
       }
     }
   }
   input{
     display: none;
   }
-  $pages: 3;
+  $pages: 4;
   @for $i from 1 through $pages{
     input#page#{$i}:checked ~ div#pagesContainer{
       top: calc(#{$i - 1} * -100dvh);
