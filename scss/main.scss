@@ -295,14 +295,14 @@ div#content{
         p.small{
           font-size: 12px;
         }
-        div#showcasePro{
+        div#showcasePro, div#showcasePer{
           position: relative;
           left: 0;
           transition: left 0.5s ease-in-out 0s;
-          div:nth-child(2) > div > img{
+        }
+        div#showcasePro > div:nth-child(2) > div > img{
             background-color: #011381;
           }
-        }
         div.showcase{
           display: flex;
           flex-direction: row;
@@ -359,6 +359,12 @@ div#content{
             left: calc(#{$i - 1} * (-75vw - 32px));
           }
         }
+        $slides: 2;
+        @for $i from 1 through $slides{
+          input#slide#{$i}per:checked ~ div#showcasePer{
+            left: calc(#{$i - 1} * (-75vw - 32px));
+          }
+        }
       }
     }
   }
@@ -374,7 +380,6 @@ div#content{
       }
     }
   }
-
 }
 
 div#counter{
