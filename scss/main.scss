@@ -235,6 +235,8 @@ div#content{
         padding: 16px;
         border: 4px $fg-color solid;
         overflow: hidden auto;
+        scrollbar-color: $fg-color $bg-color;
+        scrollbar-width: thin;
         will-change: filter, color, border-color, opacity;
         label{
           display: block;
