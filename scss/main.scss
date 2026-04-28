@@ -417,6 +417,11 @@ div#scroller{
   will-change: left;
   -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.2));
 
+  h1{
+    display: inline;
+    margin: auto 0;
+  }
+
   span {
     display: inline-block;
     animation: wave 4s ease-in-out infinite;
@@ -428,7 +433,7 @@ div#scroller{
 
   @keyframes scroll {
     from { left: 100vw; }
-    to   { left: -664px; }
+    to   { left: -880px; }
   }
 
   @keyframes wave {
