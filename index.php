@@ -12,6 +12,7 @@ $db->execute();
 $db->query('SELECT count FROM visitors LIMIT 1');
 $db->execute();
 $pagevars['visitorcount'] = str_pad($db->fetch()->count, 8, '0', STR_PAD_LEFT);
+$pagevars['inlinecss'] = file_get_contents(DIR_CSS . 'main.css');
 
 switch ($page) {
 	default:
@@ -19,7 +20,7 @@ switch ($page) {
 		break;
 }
 
-$loader = new \Twig\Loader\FilesystemLoader(array(DIR_TPL, DIR_TPL . 'include/'));
+$loader = new \Twig\Loader\FilesystemLoader(array(DIR_TPL, DIR_TPL . 'include/', DIR_CSS));
 $twig = new \Twig\Environment($loader, array(
 	'cache' => DIR_CACHE,
 	'debug' => (bool) ISDEV
