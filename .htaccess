@@ -20,7 +20,7 @@ script-src 'self' 'sha256-9jtjNGPjDsL5pafVmutYFkzeHH6NTkB3WAEUGqqKhSI='; \
 			frame-src 'none'; \
 				base-uri 'none'; \
 					font-src 'self'; \
-						style-src 'self' 'sha256-vcx8PYQ24ryrOLu1iWAwOjtpAs05SjyD122B7MLnRlo=' 'sha256-E6hofMOmtg/hmdW/Ge9yLh2rYggf1Z+VMsXKBWQryIU='; \
+						style-src 'self' 'unsafe-inline'; \
 							connect-src 'self'; \
 								worker-src blob:; \
 									require-trusted-types-for 'script'; \
