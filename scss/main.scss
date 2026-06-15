@@ -201,17 +201,10 @@ div#content{
         }
         @keyframes textAppear{
           0%{
-            filter: blur(4px) hue-rotate(1080deg);
-            color: $neon-color;
-            border-color: $neon-color;
             opacity: 0;
           }
-          99%{
-            filter: blur(0) hue-rotate(0);
-            color: $fg-color;
-            opacity: 1;
-          }
           100%{
+            opacity: 1;
             filter: none;
           }
         }
@@ -319,7 +312,7 @@ div#content{
     input#page#{$i}:checked ~ div#pagesContainer{
       top: calc(#{$i - 1} * -100dvh);
       div.page#{$i} div.pageContent{
-        animation: textAppear 2s ease-out;
+        animation: textAppear 1s ease-in;
       }
     }
   }
