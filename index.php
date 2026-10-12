@@ -29,6 +29,9 @@ if(ISDEV){
 	$twig->addExtension(new \Twig\Extension\DebugExtension());
 }
 
+$interval = date_diff(date_create("2012-09-01"), date_create(date('Y-m-d')));
+$pagevars['years_experience'] = $interval->format("%y");
+
 $output[] = $twig->render($template, $pagevars);
 $output = implode('', $output);
 print $output;
