@@ -36,11 +36,17 @@
 		<div class="cube">
 			<i class="front"></i><i class="back"></i><i class="right"></i><i class="left"></i><i class="top"></i><i class="bottom"></i>
 		</div>
-<pre class="ansi">███    ███ ██     ██
-████  ████ ██     ██
-██ ████ ██ ██  █  ██
-██  ██  ██ ██ ███ ██
-██      ██  ███ ███ </pre>
+{# MW logo: one fixed-size grid cell per character, so the blocks line up #}
+		{% set logo = [
+			'███    ███ ██     ██ ',
+			'████  ████ ██     ██ ',
+			'██ ████ ██ ██  █  ██ ',
+			'██  ██  ██ ██ ███ ██ ',
+			'██      ██  ███ ███  ',
+		] %}
+		<div class="ansi">
+			{%- for row in logo %}{% for char in row|split('') %}<span>{{ char == '█' ? '█' }}</span>{% endfor %}{% endfor -%}
+		</div>
 	</div>
 	<h1>{{ cv.name }}</h1>
 	<p class="class-line">{{ cv.job_title }}<span class="sep"> · </span><span>PHP · APIs · Databases</span></p>
@@ -154,7 +160,7 @@
 
 <footer class="credits">
 	<p>© 2012–{{ year }} {{ cv.name }}</p>
-	<p>Static HTML built with PHP, Twig and SCSS. No JavaScript, no cookies, no tracking.</p>
+	<p>This page is static HTML built with PHP, Twig and SCSS, without JavaScript or cookies.</p>
 	<img class="counter" src="/counter.svg" width="144" height="26" alt="Visitor counter">
 </footer>
 </body>

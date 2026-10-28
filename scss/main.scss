@@ -258,9 +258,10 @@ h3 {
 
 .ansi {
   position: relative;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(21, 10px);
+  grid-auto-rows: 14px;
   font: 14px/14px terminus, monospace;
-  letter-spacing: 3px;
   color: $white;
   text-shadow: 1px 1px 10px $green, 1px 1px 10px $green;
 }
