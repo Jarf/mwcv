@@ -107,7 +107,8 @@ REQUIRED_KEYS=$(grep -oE '^[A-Z_]+=' .env.example | tr -d '=' | tr '\n' ' ')
 # --- Deploy -------------------------------------------------------------------
 
 echo "Deploying ${LIVE:0:7} → ${LOCAL:0:7}"
-ssh -o BatchMode=yes "$SERVER" bash -s -- "$APP_DIR" "$LOCAL" "$COMPOSER_CHANGED" "$REQUIRED_KEYS" "$VHOSTS" <<'REMOTE'
+# ssh joins arguments into one command line, so quote them for the remote shell
+ssh -o BatchMode=yes "$SERVER" "bash -s -- $(printf '%q ' "$APP_DIR" "$LOCAL" "$COMPOSER_CHANGED" "$REQUIRED_KEYS" "$VHOSTS")" <<'REMOTE'
 set -euo pipefail
 APP_DIR=$1 TARGET=$2 COMPOSER_CHANGED=$3 REQUIRED_KEYS=$4 VHOSTS=$5
 cd "$APP_DIR"
