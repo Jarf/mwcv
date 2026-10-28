@@ -51,8 +51,10 @@ AddType image/x-icon .ico
 AddType image/webp .webp
 AddType application/manifest+json .webmanifest
 
-# Compress text formats the server-wide config misses
+# Compress text formats. This replaces (not extends) the server-wide list,
+# so every type needs listing here
 <IfModule mod_filter.c>
+	AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/xml
 	AddOutputFilterByType DEFLATE image/svg+xml image/x-icon application/manifest+json application/ld+json
 </IfModule>
 
