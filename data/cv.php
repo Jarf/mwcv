@@ -10,7 +10,7 @@ return [
 	'job_title' => 'Lead Full Stack Developer',
 	'headline' => 'Lead Full Stack Developer | PHP | APIs | Databases',
 	'url' => 'https://martinwadeson.com/',
-	'email' => 'martin.wadeson@gmail.com',
+	'email' => 'hello@martinwadeson.com',
 	'locality' => 'Warrington',
 	'country' => 'GB',
 	'location' => 'Warrington, UK',
