@@ -34,10 +34,9 @@ class db {
         try {
             $this->conn = new PDO($dsn, $this->dbuser, $this->dbpass, $options);
         } catch (PDOException $ex) {
-            // Log details server-side only; never show them to visitors
+            // Don't pass the PDO message on: it can include connection details
             error_log('DB connection failed: ' . $ex->getMessage());
-            http_response_code(503);
-            exit('Service temporarily unavailable');
+            throw new RuntimeException('Database unavailable');
         }
     }
 

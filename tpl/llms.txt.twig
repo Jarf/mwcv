@@ -1,0 +1,47 @@
+# {{ cv.name }}
+
+> {{ cv.description }}
+
+{{ cv.name }} is a {{ cv.job_title|lower }} based in {{ cv.location }}. Contact: {{ cv.email }}.
+
+## Profile
+
+{% for paragraph in cv.profile %}
+{{ paragraph }}
+
+{% endfor %}
+## Experience
+
+{% for job in cv.experience %}
+### {{ job.role }}, {{ job.company }} ({{ job.start_label }} – {{ job.end_label }})
+
+{% for point in job.points %}
+- {{ point }}
+{% endfor %}
+
+{% endfor %}
+## Projects
+
+{% for project in cv.projects %}
+- [{{ project.title }}]({{ project.url }}) ({{ project.tag }}): {{ project.text }}
+{% endfor %}
+
+## Skills
+
+{% for skill in cv.skills %}
+- {{ skill.group }}: {% if skill.items is defined %}{{ skill.items|join(', ') }}{% if skill.note is defined %}. {% endif %}{% endif %}{% if skill.note is defined %}{{ skill.note }}{% endif %}
+
+{% endfor %}
+
+## Qualifications
+
+{% for q in cv.qualifications %}
+- {{ q.title }}, {{ q.place }}, {{ q.years }}
+{% endfor %}
+
+## Links
+
+- Website: {{ cv.url }}
+{% for link in cv.links %}
+- {{ link.label }}: {{ link.url }}
+{% endfor %}

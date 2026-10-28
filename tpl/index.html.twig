@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+{% include 'head.twig' %}
+<title>{{ cv.name }} – {{ cv.job_title }} (PHP, APIs, Databases)</title>
+<meta name="description" content="{{ cv.description }}">
+<link rel="canonical" href="{{ cv.url }}">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="{{ cv.url }}">
+<meta property="og:site_name" content="{{ cv.name }}">
+<meta property="og:title" content="{{ cv.name }} – {{ cv.job_title }}">
+<meta property="og:description" content="{{ cv.description }}">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="{{ cv.url }}img/ogimage.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The initials MW inside a 3D wireframe cube">
+<meta property="profile:first_name" content="Martin">
+<meta property="profile:last_name" content="Wadeson">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{{ structured_data|raw }}
+</script>
+</head>
+<body>
+<a class="skip" href="#player">Skip to content</a>
+<div class="space" aria-hidden="true"></div>
+
+<header class="title-screen">
+	<p class="attract" aria-hidden="true">
+		{%- for letter in 'WELCOME TO MARTINWADESON.COM'|split('') -%}
+		<span>{{ letter == ' ' ? ' ' : letter }}</span>
+		{%- endfor -%}
+	</p>
+	<div class="emblem" aria-hidden="true">
+		<div class="cube">
+			<i class="front"></i><i class="back"></i><i class="right"></i><i class="left"></i><i class="top"></i><i class="bottom"></i>
+		</div>
+<pre class="ansi">███    ███ ██     ██
+████  ████ ██     ██
+██ ████ ██ ██  █  ██
+██  ██  ██ ██ ███ ██
+██      ██  ███ ███ </pre>
+	</div>
+	<h1>{{ cv.name }}</h1>
+	<p class="class-line">{{ cv.job_title }}<span class="sep"> · </span><span>PHP · APIs · Databases</span></p>
+	<p class="print-only">{{ cv.location }} · {{ cv.email }} · {{ cv.url|trim('/', 'right')|replace({'https://': ''}) }}</p>
+	<a class="press-start" href="#player">▶ Press start</a>
+</header>
+
+<nav class="menu" aria-label="Sections">
+	<ul>
+		<li><a href="#player">Player 1</a></li>
+		<li><a href="#high-scores">High scores</a></li>
+		<li><a href="#stages">Stage select</a></li>
+		<li><a href="#training">Training</a></li>
+		<li><a href="#continue">Continue?</a></li>
+	</ul>
+</nav>
+
+<main>
+	<section id="player" class="panel" aria-labelledby="player-title">
+		<h2 id="player-title"><span class="arcade" aria-hidden="true">Player 1</span> <span class="plain">Profile</span></h2>
+		<dl class="stats">
+			<div><dt>Level</dt><dd>{{ years }}</dd></div>
+			<div><dt>Class</dt><dd>{{ cv.job_title }}</dd></div>
+			<div><dt>Base</dt><dd>{{ cv.location }}</dd></div>
+		</dl>
+		{% for paragraph in cv.profile %}
+		<p>{{ paragraph }}</p>
+		{% endfor %}
+
+		<h3><span class="arcade" aria-hidden="true">Inventory</span> <span class="plain">Skills</span></h3>
+		<dl class="inventory">
+			{% for skill in cv.skills %}
+			<div class="slot">
+				<dt>{{ skill.group }}</dt>
+				<dd>
+					{% if skill.items is defined %}
+					<ul>{% for item in skill.items %}<li>{{ item }}</li>{% endfor %}</ul>
+					{% endif %}
+					{% if skill.note is defined %}<p>{{ skill.note }}</p>{% endif %}
+				</dd>
+			</div>
+			{% endfor %}
+		</dl>
+	</section>
+
+	<section id="high-scores" class="panel" aria-labelledby="scores-title">
+		<h2 id="scores-title"><span class="arcade" aria-hidden="true">High scores</span> <span class="plain">Experience</span></h2>
+		<ol class="scores">
+			{% set ranks = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'] %}
+			{% for job in cv.experience %}
+			<li class="score">
+				<div class="score-row">
+					<span class="rank" aria-hidden="true">{{ ranks[loop.index0] }}</span>
+					<h3>{{ job.role }}<span class="sep">, </span><span class="company">{{ job.company }}</span></h3>
+					<p class="dates">
+						<time datetime="{{ job.start }}">{{ job.start_label }}</time> –
+						{% if job.end %}<time datetime="{{ job.end }}">{{ job.end_label }}</time>{% else %}present{% endif %}
+						<span class="points" aria-hidden="true">{{ job.score }}</span>
+					</p>
+				</div>
+				<ul>
+					{% for point in job.points %}
+					<li>{{ point }}</li>
+					{% endfor %}
+				</ul>
+			</li>
+			{% endfor %}
+		</ol>
+	</section>
+
+	<section id="stages" class="panel" aria-labelledby="stages-title">
+		<h2 id="stages-title"><span class="arcade" aria-hidden="true">Stage select</span> <span class="plain">Projects</span></h2>
+		<ul class="stages">
+			{% for project in cv.projects %}
+			<li class="stage">
+				<div class="stage-art">
+					{% if project.logo is defined %}
+					<img class="logo{% if project.logo.dark is defined %} logo-dark{% endif %}" src="/img/{{ project.logo.file }}" width="{{ project.logo.width }}" height="{{ project.logo.height }}" alt="{{ project.title }} logo" loading="lazy" decoding="async">
+					{% else %}
+					<img src="/img/{{ project.screenshot }}-360.webp" srcset="/img/{{ project.screenshot }}-360.webp 360w, /img/{{ project.screenshot }}-600.webp 600w" sizes="(min-width: 760px) 340px, calc(100vw - 72px)" width="360" height="270" alt="Screenshot of {{ project.title }}" loading="lazy" decoding="async">
+					{% endif %}
+				</div>
+				<p class="tag">{{ project.tag }}</p>
+				<h3><a href="{{ project.url }}">{{ project.title }}</a></h3>
+				<p>{{ project.text }}</p>
+			</li>
+			{% endfor %}
+		</ul>
+	</section>
+
+	<section id="training" class="panel" aria-labelledby="training-title">
+		<h2 id="training-title"><span class="arcade" aria-hidden="true">Training</span> <span class="plain">Qualifications</span></h2>
+		<ul class="training">
+			{% for q in cv.qualifications %}
+			<li><strong>{{ q.title }}</strong> <span>{{ q.place }}, {{ q.years }}</span></li>
+			{% endfor %}
+		</ul>
+	</section>
+
+	<section id="continue" class="panel" aria-labelledby="continue-title">
+		<h2 id="continue-title"><span class="arcade" aria-hidden="true">Continue?</span> <span class="plain">Contact</span></h2>
+		<p class="countdown" aria-hidden="true"></p>
+		<ul class="links">
+			<li><a href="mailto:{{ cv.email }}">{{ cv.email }}</a></li>
+			{% for link in cv.links %}
+			<li><a href="{{ link.url }}" rel="me"><img src="/img/{{ link.icon }}" width="20" height="20" alt="">{{ link.label }}</a></li>
+			{% endfor %}
+		</ul>
+	</section>
+</main>
+
+<footer class="credits">
+	<p>© 2012–{{ year }} {{ cv.name }}</p>
+	<p>Static HTML built with PHP, Twig and SCSS. No JavaScript, no cookies, no tracking.</p>
+	<img class="counter" src="/counter.svg" width="144" height="26" alt="Visitor counter">
+</footer>
+</body>
+</html>

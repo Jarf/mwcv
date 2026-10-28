@@ -1,494 +1,955 @@
-@use "sass:math";
-@use "sass:list";
-@use "sass:string";
+// Build: npx -y sass@1.83.0 --style=compressed --no-source-map scss/main.scss public/css/main.css
 
-@font-face{
+@font-face {
   font-family: terminus;
-  src: url('/fonts/terminus.woff2');
+  src: url('/fonts/terminus.woff2') format('woff2');
   font-display: swap;
 }
 
-$neon-color: #00ff00;
-$bg-color: #000000;
-$fg-color: #ffffff;
+// Integer custom property so the "Continue?" countdown can animate
+@property --count {
+  syntax: '<integer>';
+  initial-value: 9;
+  inherits: false;
+}
 
-$breakpoint-tablet: 768px;
+$green: #00ff00;
+$white: #ffffff;
+$black: #000000;
+$grey: #b3b3b3;
+$accent: #ff3df5; // focus and hover highlight
+$border: 4px;
+$notch: 4px;
+$nav-height: 56px;
+$wide: 760px;
 
+// Stepped "pixel" corners
+@mixin pixel-corners($n: $notch) {
+  clip-path: polygon(
+    0 $n, $n $n, $n 0,
+    calc(100% - #{$n}) 0, calc(100% - #{$n}) $n, 100% $n,
+    100% calc(100% - #{$n}), calc(100% - #{$n}) calc(100% - #{$n}), calc(100% - #{$n}) 100%,
+    $n 100%, $n calc(100% - #{$n}), 0 calc(100% - #{$n})
+  );
+}
+
+@mixin glow($colour: $green) {
+  text-shadow: 0 0 8px rgba($colour, 0.6);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: $black;
+  color-scheme: dark;
+}
+
+// No body background: it would paint over the starfield (z-index: -1)
 body {
-  font-family: terminus;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100dvh;
-  background-color: $bg-color;
   margin: 0;
-  overflow: hidden;
-  a, a:visited, a:hover, a:active {
-    color: $fg-color;
+  color: $white;
+  font: 16px/1.6 terminus, ui-monospace, monospace;
+  overflow-x: hidden;
+}
+
+// CRT scanlines over everything
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba($black, 0.22) 2px 3px);
+}
+
+a {
+  color: $white;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: $green;
   }
 }
 
-div#cube{
-  width: 100vw;
-  height: 100dvh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  .scene {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    left: calc(50vw - 100px);
-    top: calc(50vh - 100px);
-    perspective: 600px;
-  }
+:focus-visible {
+  outline: 3px solid $accent;
+  outline-offset: 3px;
+}
 
-  /* Cube Container */
-  .cube {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    animation: rotate-cube 24s infinite linear;
+h1,
+h2,
+h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+// Headings pair an arcade label with a plain one ("PLAYER 1 · PROFILE");
+// print shows only the plain label
+h2,
+h3 {
+  .plain {
+    color: $white;
+    font-size: 0.6em;
+    text-shadow: none;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+
+    &::before {
+      content: '· ';
+      color: $grey;
+    }
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+.skip {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 30;
+  padding: 8px 16px;
+  background: $black;
+  border: $border solid $white;
+
+  &:focus {
+    top: 16px;
+  }
+}
+
+// --- Starfield ---------------------------------------------------------------
+// One 512px tile at 1x (static, far), 2x and 3x (drifting, nearer)
+
+.space {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: url('/img/stars.svg') 0 0 / 512px 512px;
+  opacity: 0.9;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    background: url('/img/stars.svg');
     will-change: transform;
   }
 
-  /* General Face Styling */
-  .face {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border: 1px solid $fg-color;
-    box-shadow: 0 0 8px 0 $fg-color;
+  &::before {
+    height: calc(100% + 1024px);
+    background-size: 1024px 1024px;
+    opacity: 0.7;
+    animation: drift-near 120s linear infinite;
   }
 
-  /* Individual Face Positions */
-  .front {
-    transform: rotateY(0deg) translateZ(100px);
-  }
-
-  .back {
-    transform: rotateY(180deg) translateZ(100px);
-  }
-
-  .right {
-    transform: rotateY(90deg) translateZ(100px);
-  }
-
-  .left {
-    transform: rotateY(-90deg) translateZ(100px);
-  }
-
-  .top {
-    transform: rotateX(90deg) translateZ(100px);
-  }
-
-  .bottom {
-    transform: rotateX(-90deg) translateZ(100px);
-  }
-
-  /* Animation Keyframes */
-  @keyframes rotate-cube {
-    from {
-      transform: rotateY(0deg) rotateX(0deg);
-    }
-    to {
-      transform: rotateY(360deg) rotateX(360deg);
-    }
+  &::after {
+    height: calc(100% + 1536px);
+    background-size: 1536px 1536px;
+    background-position: 300px 200px;
+    animation: drift-nearest 90s linear infinite;
   }
 }
 
-div#ansi{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100dvh;
+@keyframes drift-near {
+  to { transform: translateY(-1024px); }
+}
+
+@keyframes drift-nearest {
+  to { transform: translateY(-1536px); }
+}
+
+// --- Title screen ------------------------------------------------------------
+
+.title-screen {
+  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  div.scene{
-    position: relative;
-    span{
-      color: $fg-color;
-      font-size: 14px;
-      display: inline-block;
-      width: 10px;
-      height: 14px;
-      text-shadow: 1px 1px 10px $neon-color, 1px 1px 10px $neon-color;
-    }
-  }
-}
-
-div#content{
-  display: grid;
-  color: $fg-color;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100dvh;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 120px 16px 64px;
   overflow: hidden;
   text-align: center;
-  align-items: center;
-  div#pagesContainer{
-    position: relative;
-    top: 0;
-    transition: top 0.5s ease-in-out 0s;
-    div.pageContainer{
-      // Off-screen pages are hidden so keyboard focus can't land in them;
-      // the delay keeps the outgoing page visible during the slide
-      visibility: hidden;
-      transition: visibility 0s linear 0.5s;
-      &.page1{
-        visibility: visible;
-      }
-      width: 100vw;
-      height: 100dvh;
-      display: flex;
-      overflow: hidden;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      div.pageContent{
-        display: block;
-        min-width: 240px;
-        max-width: 75%;
-        max-height: calc(100dvh - 80px);
-        background-color: rgba(0,0,0,0.5);
-        text-align: center;
-        padding: 16px;
-        border: 4px $fg-color solid;
-        overflow: hidden auto;
-        scrollbar-color: $fg-color $bg-color;
-        scrollbar-width: thin;
-        label{
-          display: block;
-          width: 0; 
-          height: 0; 
-          margin: 0 auto;
-          cursor: pointer;
-        }
-        label.arrowDown{
-          border-left: 20px solid transparent;
-          border-right: 20px solid transparent;
-          border-top: 20px solid $fg-color;
-        }
-        label.arrowUp{
-          border-left: 20px solid transparent;
-          border-right: 20px solid transparent;
-          border-top: 20px solid $fg-color;
-          transform: rotate(180deg);
-        }
-        label.arrowLeft{
-          border-top: 20px solid transparent;
-          border-bottom: 20px solid transparent; 
-          border-right:20px solid $fg-color; 
-        }
-        label.arrowRight{
-          border-top: 20px solid transparent;
-          border-bottom: 20px solid transparent;
-          border-left: 20px solid $fg-color;
-        }
-        @keyframes textAppear{
-          0%{
-            opacity: 0;
-          }
-          100%{
-            opacity: 1;
-          }
-        }
-        p{
-          font-size: 16px;
-          text-shadow: -1px -1px 0 $bg-color, 1px -1px 0 $bg-color, -1px 1px 0 $bg-color, 1px 1px 0 $bg-color;
-        }
-        p.header{
-          font-size: 24px;
-          font-weight: bold;
-          text-align: left;
-          margin: 0;
-        }
-        p.small{
-          font-size: 12px;
-        }
-        div#showcasePro, div#showcasePer{
-          position: relative;
-          left: 0;
-          transition: left 0.5s ease-in-out 0s;
-        }
-        div#showcasePro > div:nth-child(2) > div > img{
-          background-color: #011381;
-        }
-        div#showcasePer > div > div > img{
-          padding: 4px;
-        }
-        div.showcase{
-          display: flex;
-          flex-direction: row;
-          margin: 0 -16px;
-          div.slideContainer{
-            display: grid;
-            grid-template-columns: 20px calc(100% - 40px) 20px;
-            margin: 0 16px;
-            visibility: hidden;
-            transition: visibility 0s linear 0.5s;
-            label{
-              align-self: center;
-            }
-            div.slide{
-              width: calc(75vw - 80px);
-              margin: 0 20px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              flex-direction: column;
-              img{
-                border: 0;
-                height: auto;
-                width: auto;
-                max-width: 100%;
-                object-fit: contain;
-                display: block;
-                background-color: $fg-color;
-                padding: 8px;
-              }
-              div.text{
-                p{
-                  width: 100%;
-                }
-              }
-              @media (min-width: $breakpoint-tablet) {
-                flex-direction: row;
-                justify-content: space-between;
-                width: calc(75vw - 80px);
-                img{
-                  display: inline-block;
-                  margin-right: 8px;
-                  width: 33.3%
-                }
-                p{
-                  width: 66.6%;
-                }
-              }
-            }
-          }
-        }
-        $showcases: (pro: 3, per: 2);
-        @each $name, $slides in $showcases{
-          $showcase: "div#showcase#{string.to-upper-case(string.slice($name, 1, 1))}#{string.slice($name, 2)}";
-          @for $i from 1 through $slides{
-            input#slide#{$i}#{$name}:checked ~ #{$showcase}{
-              left: calc(#{$i - 1} * (-75vw - 32px));
-              div.slideContainer:nth-child(#{$i}){
-                visibility: visible;
-                transition-delay: 0s;
-              }
-            }
-            input#slide#{$i}#{$name}:focus-visible ~ #{$showcase} div.slideContainer:nth-child(#{$i}) div.slide{
-              outline: 2px dashed $neon-color;
-              outline-offset: 4px;
-            }
-          }
-        }
-        div#socialsContainer{
-          margin-top: 16px;
-          a{
-            padding: 8px;
-            display: inline-block;
-          }
-        }
-      }
-    }
-  }
-  // Visually hidden but still focusable, so keyboard users can switch
-  // pages/slides with Tab + arrow keys
-  input{
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    border: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  $pages: 4;
-  @for $i from 1 through $pages{
-    input#page#{$i}:checked ~ div#pagesContainer{
-      top: calc(#{$i - 1} * -100dvh);
-      div.pageContainer{
-        visibility: hidden;
-      }
-      div.page#{$i}{
-        visibility: visible;
-        transition-delay: 0s;
-        div.pageContent{
-          animation: textAppear 1s ease-in;
-        }
-      }
-    }
-    input#page#{$i}:focus-visible ~ div#pagesContainer div.page#{$i} div.pageContent{
-      outline: 2px dashed $neon-color;
-      outline-offset: 4px;
-    }
+
+  h1 {
+    margin: 32px 0 8px;
+    font-size: clamp(32px, 8vw, 64px);
+    @include glow($white);
   }
 }
 
-div#counter{
-  color: $neon-color;
-  position: fixed;
-  bottom: 0;
+.attract {
+  position: absolute;
+  top: 6%;
   left: 0;
-  height: 36px;
-  text-align: center;
-  line-height: 36px;
-  width: 100vw;
-}
-
-div#scroller{
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 30%;
-  background-color: $bg-color;
-  color: $neon-color;
-  white-space:nowrap;
-  z-index: -1;
-  animation: scroll 15s linear infinite;
-  text-align: center;
-  will-change: transform;
-  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.2));
-
-  h1{
-    display: inline;
-    margin: auto 0;
-  }
+  margin: 0;
+  color: $green;
+  font-size: 32px;
+  white-space: nowrap;
+  animation: attract-scroll 15s linear infinite;
+  -webkit-box-reflect: below 0 linear-gradient(transparent, rgba($black, 0.25));
 
   span {
     display: inline-block;
+    min-width: 0.6em;
     animation: wave 4s ease-in-out infinite;
-    position: relative;
-    top: 50%;
-    font-size: 32px;
-    will-change: transform;
-  }
-
-  @keyframes scroll {
-    from { transform: translateX(100vw); }
-    to   { transform: translateX(-880px); }
-  }
-
-  @keyframes wave {
-    0%   { transform: translateY(-100%); }
-    50% { transform: translateY(100%); }
-    100%   { transform: translateY(-100%); }
-  }
-
-}
-$letters: 28;
-$step: 0.08s;
-@for $i from 1 through $letters {
-  div#scroller span:nth-child(#{$i}) {
-    animation-delay: $i * $step;
   }
 }
 
-div#starfield{
-  // Stars are generated over 2000px; scale up on wider screens rather than
-  // shipping more box-shadows
-  position: fixed;
-  top: 0;
-  left: 0;
-  transform-origin: top left;
-  @media (min-width: 2000px) {
-    transform: scale(2);
+@for $i from 1 through 30 {
+  .attract span:nth-child(#{$i}) {
+    animation-delay: $i * 0.08s;
   }
-  @function stars($count) {
-    $stars: ();
-    @for $i from 1 through $count {
-      $x: math.random(2000) * 1px;
-      $y: math.random(2000) * 1px;
-      $stars: list.append($stars, #{$x} #{$y} $fg-color, comma);
-    }
-    @return $stars;
-  }
+}
 
-  $stars-small: stars(700);
-  $stars-medium: stars(200);
-  $stars-big: stars(100);
-  %star-layer {
+@keyframes attract-scroll {
+  from { transform: translateX(100vw); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(-50%); }
+  50% { transform: translateY(50%); }
+}
+
+.emblem {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 200px;
+  height: 200px;
+  perspective: 600px;
+}
+
+.cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: spin 24s linear infinite;
+  will-change: transform;
+
+  i {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 1px;
-    background: transparent;
+    inset: 0;
+    border: 1px solid $white;
+    box-shadow: 0 0 8px $white;
   }
-  $travel: 2000px;
-  .stars {
-    @extend %star-layer;
-    box-shadow: $stars-small;
 
+  .front { transform: translateZ(100px); }
+  .back { transform: rotateY(180deg) translateZ(100px); }
+  .right { transform: rotateY(90deg) translateZ(100px); }
+  .left { transform: rotateY(-90deg) translateZ(100px); }
+  .top { transform: rotateX(90deg) translateZ(100px); }
+  .bottom { transform: rotateX(-90deg) translateZ(100px); }
+}
+
+@keyframes spin {
+  to { transform: rotateY(360deg) rotateX(360deg); }
+}
+
+.ansi {
+  position: relative;
+  margin: 0;
+  font: 14px/14px terminus, monospace;
+  letter-spacing: 3px;
+  color: $white;
+  text-shadow: 1px 1px 10px $green, 1px 1px 10px $green;
+}
+
+.class-line {
+  margin: 0;
+  color: $green;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+
+  // Two lines on phones, one on wider screens
+  span {
+    display: block;
+  }
+
+  .sep {
+    display: none;
+  }
+
+  @media (min-width: $wide) {
+    span,
+    .sep {
+      display: inline;
+    }
+  }
+}
+
+.press-start {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 10px 20px;
+  border: $border solid $white;
+  color: $white;
+  font-size: 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  animation: blink 1.2s steps(1) infinite;
+  @include pixel-corners;
+
+  &:hover,
+  &:focus-visible {
+    color: $black;
+    background: $green;
+    border-color: $green;
+    animation: none;
+  }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+// --- Menu ----------------------------------------------------------------------
+
+.menu {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba($black, 0.9);
+  border-block: $border solid $white;
+
+  // One row: scrolls sideways on phones rather than wrapping
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0 8px;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    @media (min-width: $wide) {
+      justify-content: center;
+    }
+  }
+
+  li {
+    flex: none;
+  }
+
+  a {
+    display: block;
+    padding: 14px 10px;
+    font-size: 15px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    // Arcade menu cursor
+    &::before {
+      content: '▶ ';
+      visibility: hidden;
+      color: $green;
+    }
+
+    &:hover::before,
+    &:focus-visible::before {
+      visibility: visible;
+    }
+  }
+}
+
+// --- Panels --------------------------------------------------------------------
+
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.panel {
+  margin: 56px 0;
+  padding: 24px;
+  border: $border solid $white;
+  background: rgba($black, 0.8);
+  scroll-margin-top: $nav-height + 24px;
+  @include pixel-corners;
+
+  @media (min-width: $wide) {
+    padding: 32px 40px;
+  }
+
+  h2 {
+    margin: 0 0 24px;
+    color: $green;
+    font-size: 28px;
+    letter-spacing: 0.15em;
+    @include glow;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  > p {
+    max-width: 70ch;
+  }
+}
+
+// Player 1
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 0 0 24px;
+
+  div {
+    padding: 8px 12px;
+    border: 2px solid $white;
+  }
+
+  dt {
+    color: $green;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 20px;
+  }
+}
+
+.inventory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 0;
+
+  .slot {
+    padding: 12px 14px;
+    border: 2px dashed $grey;
+  }
+
+  dt {
+    margin-bottom: 8px;
+    color: $green;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0 6px;
+    border: 1px solid $white;
+    font-size: 14px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  ul + p {
+    margin-top: 8px;
+  }
+}
+
+// High scores
+
+.scores {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  ul {
+    margin: 12px 0 0;
+    padding-left: 20px;
+  }
+
+  li li {
+    margin-bottom: 6px;
+
+    &::marker {
+      content: '▪ ';
+      color: $green;
+    }
+  }
+}
+
+.score + .score {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px dashed $grey;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 0 12px;
+  align-items: baseline;
+
+  @media (min-width: $wide) {
+    grid-template-columns: 56px 1fr auto;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  // Company on its own line on phones, after a comma on wider screens
+  .sep {
+    display: none;
+  }
+
+  .company {
+    display: block;
+    color: $green;
+  }
+
+  @media (min-width: $wide) {
+    .sep,
+    .company {
+      display: inline;
+    }
+  }
+
+  .dates {
+    grid-column: 2;
+    margin: 4px 0 0;
+    color: $grey;
+
+    @media (min-width: $wide) {
+      grid-column: 3;
+      grid-row: 1;
+      margin: 0;
+      text-align: right;
+    }
+  }
+
+  .points {
+    display: block;
+    color: $green;
+  }
+}
+
+.rank {
+  color: $green;
+  font-size: 20px;
+  text-transform: uppercase;
+  @include glow;
+}
+
+// Stage select
+
+.stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stage {
+  position: relative;
+  padding-bottom: 8px;
+  border: $border solid $white;
+  background: $black;
+  @include pixel-corners;
+
+  &:hover,
+  &:focus-within {
+    border-color: $green;
+  }
+
+  &:focus-within {
+    outline: 3px solid $accent;
+    outline-offset: 3px;
+  }
+
+  h3 {
+    margin: 4px 16px 8px;
+  }
+
+  h3 a {
+    text-decoration: none;
+
+    // Whole card is clickable
     &::after {
-      content: "";
+      content: '';
       position: absolute;
-      top: $travel;
-      width: 1px;
-      height: 1px;
-      box-shadow: $stars-small;
+      inset: 0;
     }
 
-    animation: animStar 50s linear infinite;
+    &:focus-visible {
+      outline: none;
+    }
   }
-  .stars2 {
-    @extend %star-layer;
-    width: 2px;
-    height: 2px;
-    box-shadow: $stars-medium;
 
-    &::after {
-      content: "";
-      position: absolute;
-      top: $travel;
-      width: 2px;
-      height: 2px;
-      box-shadow: $stars-medium;
-    }
-
-    animation: animStar 100s linear infinite;
+  p {
+    margin: 0 16px 8px;
+    font-size: 15px;
   }
-  .stars3 {
-    @extend %star-layer;
-    width: 3px;
-    height: 3px;
-    box-shadow: $stars-big;
+}
 
-    &::after {
-      content: "";
-      position: absolute;
-      top: $travel;
-      width: 3px;
-      height: 3px;
-      box-shadow: $stars-big;
-    }
+.stage-art {
+  aspect-ratio: 4 / 3;
+  border-bottom: $border solid $white;
+  background: $white;
 
-    animation: animStar 150s linear infinite;
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
   }
-  @keyframes animStar {
-    from {
-      transform: translateY(0);
+
+  .logo {
+    padding: 15%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .logo-dark {
+    background: #011381;
+  }
+}
+
+.stage .tag {
+  margin-top: 12px;
+  color: $green;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+// Training
+
+.training {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li + li {
+    margin-top: 12px;
+  }
+
+  strong {
+    display: block;
+  }
+
+  span {
+    color: $grey;
+  }
+}
+
+// Continue?
+
+#continue {
+  text-align: center;
+}
+
+.countdown {
+  margin: 0 0 24px;
+  color: $green;
+  font-size: 72px;
+  line-height: 1;
+  @include glow;
+
+  &::before {
+    counter-reset: count var(--count);
+    content: counter(count);
+    animation: countdown 10s steps(10, jump-none) infinite;
+  }
+}
+
+@keyframes countdown {
+  from { --count: 9; }
+  to { --count: 0; }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: $border solid $white;
+    text-decoration: none;
+    @include pixel-corners;
+
+    &:hover {
+      border-color: $green;
     }
-    to {
-      transform: translateY(-$travel);
-    }
+  }
+}
+
+// Credits
+
+.credits {
+  padding: 16px 16px 48px;
+  color: $grey;
+  font-size: 14px;
+  text-align: center;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+.counter {
+  display: block;
+  margin: 16px auto 0;
+  image-rendering: pixelated;
+}
+
+// --- 404 -----------------------------------------------------------------------
+
+.game-over {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 16px;
+
+  main {
+    margin: 0;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0 0 16px;
+    color: $green;
+    font-size: 48px;
+    @include glow;
+  }
+
+  .press-start {
+    margin-top: 16px;
+  }
+}
+
+// --- Motion ----------------------------------------------------------------------
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
-    transition: none !important;
+  }
+
+  .attract {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+// --- Print: a plain CV -----------------------------------------------------------
+
+@media print {
+  html,
+  body {
+    background: $white;
+    color: $black;
+    font: 11pt/1.45 Georgia, serif;
+  }
+
+  .print-only {
+    display: block;
+    margin: 4pt 0 0;
+  }
+
+  h2,
+  h3 {
+    .arcade {
+      display: none;
+    }
+
+    .plain {
+      color: $black;
+      font-size: 1em;
+
+      &::before {
+        content: none;
+      }
+    }
+  }
+
+  .score-row {
+    display: block;
+
+    h3 {
+      display: inline;
+      margin-right: 8pt;
+    }
+
+    .sep,
+    .company {
+      display: inline;
+    }
+
+    .dates {
+      display: inline;
+      color: $black;
+    }
+  }
+
+  .scores li li::marker {
+    content: '• ';
+    color: $black;
+  }
+
+  .stats,
+  .stage .tag {
+    display: none !important;
+  }
+
+  .links {
+    justify-content: flex-start;
+    gap: 4pt 16pt;
+  }
+
+  body::after,
+  .space,
+  .skip,
+  .attract,
+  .emblem,
+  .press-start,
+  .menu,
+  .stage-art,
+  .countdown,
+  .counter,
+  .rank,
+  .points {
+    display: none !important;
+  }
+
+  .title-screen {
+    display: block;
+    min-height: 0;
+    padding: 0;
+    text-align: left;
+
+    h1 {
+      margin: 0;
+      font-size: 24pt;
+      text-shadow: none;
+    }
+  }
+
+  .class-line,
+  .panel h2,
+  .rank,
+  .company,
+  .stats dt,
+  .inventory dt,
+  .stage .tag {
+    color: $black !important;
+    text-shadow: none !important;
+  }
+
+  main {
+    max-width: none;
+    padding: 0;
+  }
+
+  .panel {
+    margin: 16pt 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    clip-path: none;
+
+    h2 {
+      margin-bottom: 8pt;
+      font-size: 14pt;
+      border-bottom: 1px solid $black;
+    }
+  }
+
+  .stats div,
+  .inventory .slot,
+  .inventory li,
+  .stage,
+  .links a {
+    border: 0;
+    padding: 0;
+    clip-path: none;
+  }
+
+  .inventory li:not(:last-child)::after {
+    content: ',';
+  }
+
+  .score,
+  .stage {
+    break-inside: avoid;
+  }
+
+  .score + .score {
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 12pt;
+  }
+
+  .stage h3 a::after {
+    content: ' (' attr(href) ')';
+    position: static;
+    font-weight: normal;
+    text-transform: none;
+  }
+
+  .links a[href^='http']::after {
+    content: ': ' attr(href);
+  }
+
+  .links img {
+    display: none;
+  }
+
+  #continue {
+    text-align: left;
+  }
+
+  .credits {
+    display: none;
+  }
+
+  a {
+    color: $black;
   }
 }
