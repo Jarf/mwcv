@@ -1,3 +1,5 @@
 .env
 /vendor/
 .sass-cache/
+/cache/
+*.map

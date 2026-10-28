@@ -1,3 +1,7 @@
+@use "sass:math";
+@use "sass:list";
+@use "sass:string";
+
 @font-face{
   font-family: terminus;
   src: url('/fonts/terminus.woff2');
@@ -19,17 +23,8 @@ body {
   background-color: $bg-color;
   margin: 0;
   overflow: hidden;
-  a {
+  a, a:visited, a:hover, a:active {
     color: $fg-color;
-    &:hover {
-      color: $fg-color;
-    }
-    &:visited {
-      color: $fg-color;
-    }
-    &:active {
-      color: $fg-color;
-    }
   }
 }
 
@@ -56,10 +51,6 @@ div#cube{
     position: relative;
     transform-style: preserve-3d;
     animation: rotate-cube 24s infinite linear;
-    background-size: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-    image-rendering: pixelated;
     will-change: transform;
   }
 
@@ -69,12 +60,10 @@ div#cube{
     width: 200px;
     height: 200px;
     border: 1px solid $fg-color;
-    background-size: cover; /* Ensures the image covers the face */
-    background-position: center; /* Centers the image on the face */
     box-shadow: 0 0 8px 0 $fg-color;
   }
 
-  /* Individual Faces with Background Images and Positions */
+  /* Individual Face Positions */
   .front {
     transform: rotateY(0deg) translateZ(100px);
   }
@@ -129,9 +118,6 @@ div#ansi{
       height: 14px;
       text-shadow: 1px 1px 10px $neon-color, 1px 1px 10px $neon-color;
     }
-    div.clear{
-      clear: both;
-    }
   }
 }
 
@@ -148,10 +134,16 @@ div#content{
   align-items: center;
   div#pagesContainer{
     position: relative;
-    // display: none;
     top: 0;
     transition: top 0.5s ease-in-out 0s;
     div.pageContainer{
+      // Off-screen pages are hidden so keyboard focus can't land in them;
+      // the delay keeps the outgoing page visible during the slide
+      visibility: hidden;
+      transition: visibility 0s linear 0.5s;
+      &.page1{
+        visibility: visible;
+      }
       width: 100vw;
       height: 100dvh;
       display: flex;
@@ -205,7 +197,6 @@ div#content{
           }
           100%{
             opacity: 1;
-            filter: none;
           }
         }
         p{
@@ -240,6 +231,8 @@ div#content{
             display: grid;
             grid-template-columns: 20px calc(100% - 40px) 20px;
             margin: 0 16px;
+            visibility: hidden;
+            transition: visibility 0s linear 0.5s;
             label{
               align-self: center;
             }
@@ -247,7 +240,6 @@ div#content{
               width: calc(75vw - 80px);
               margin: 0 20px;
               display: flex;
-              align-items: flex-start;
               justify-content: center;
               align-items: center;
               flex-direction: column;
@@ -282,16 +274,21 @@ div#content{
             }
           }
         }
-        $slides: 3;
-        @for $i from 1 through $slides{
-          input#slide#{$i}pro:checked ~ div#showcasePro{
-            left: calc(#{$i - 1} * (-75vw - 32px));
-          }
-        }
-        $slides: 2;
-        @for $i from 1 through $slides{
-          input#slide#{$i}per:checked ~ div#showcasePer{
-            left: calc(#{$i - 1} * (-75vw - 32px));
+        $showcases: (pro: 3, per: 2);
+        @each $name, $slides in $showcases{
+          $showcase: "div#showcase#{string.to-upper-case(string.slice($name, 1, 1))}#{string.slice($name, 2)}";
+          @for $i from 1 through $slides{
+            input#slide#{$i}#{$name}:checked ~ #{$showcase}{
+              left: calc(#{$i - 1} * (-75vw - 32px));
+              div.slideContainer:nth-child(#{$i}){
+                visibility: visible;
+                transition-delay: 0s;
+              }
+            }
+            input#slide#{$i}#{$name}:focus-visible ~ #{$showcase} div.slideContainer:nth-child(#{$i}) div.slide{
+              outline: 2px dashed $neon-color;
+              outline-offset: 4px;
+            }
           }
         }
         div#socialsContainer{
@@ -304,16 +301,37 @@ div#content{
       }
     }
   }
+  // Visually hidden but still focusable, so keyboard users can switch
+  // pages/slides with Tab + arrow keys
   input{
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   $pages: 4;
   @for $i from 1 through $pages{
     input#page#{$i}:checked ~ div#pagesContainer{
       top: calc(#{$i - 1} * -100dvh);
-      div.page#{$i} div.pageContent{
-        animation: textAppear 1s ease-in;
+      div.pageContainer{
+        visibility: hidden;
       }
+      div.page#{$i}{
+        visibility: visible;
+        transition-delay: 0s;
+        div.pageContent{
+          animation: textAppear 1s ease-in;
+        }
+      }
+    }
+    input#page#{$i}:focus-visible ~ div#pagesContainer div.page#{$i} div.pageContent{
+      outline: 2px dashed $neon-color;
+      outline-offset: 4px;
     }
   }
 }
@@ -378,12 +396,21 @@ $step: 0.08s;
 }
 
 div#starfield{
+  // Stars are generated over 2000px; scale up on wider screens rather than
+  // shipping more box-shadows
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  @media (min-width: 2000px) {
+    transform: scale(2);
+  }
   @function stars($count) {
     $stars: ();
     @for $i from 1 through $count {
-      $x: random(2000) * 1px;
-      $y: random(2000) * 1px;
-      $stars: append($stars, #{$x} #{$y} $fg-color, comma);
+      $x: math.random(2000) * 1px;
+      $y: math.random(2000) * 1px;
+      $stars: list.append($stars, #{$x} #{$y} $fg-color, comma);
     }
     @return $stars;
   }
@@ -456,5 +483,12 @@ div#starfield{
     to {
       transform: translateY(-$travel);
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

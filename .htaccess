@@ -14,21 +14,22 @@ Header set X-XSS-Protection "1; mode=block"
 </Else>
 Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), display-capture=()"
 Header set Content-Security-Policy "default-src 'self'; \
-script-src 'self' 'sha256-9jtjNGPjDsL5pafVmutYFkzeHH6NTkB3WAEUGqqKhSI='; \
+script-src 'self'; \
 	object-src 'none'; \
 		img-src 'self'; \
 			frame-src 'none'; \
 				base-uri 'none'; \
 					font-src 'self'; \
-						style-src 'self' 'sha256-9zUPUI8GFlVCIG5aL+cT2idw3DVSkQjiQbZl7rlmI4Y='; \
+						style-src 'self'; \
 							connect-src 'self'; \
-								worker-src blob:; \
-									require-trusted-types-for 'script'; \
-										trusted-types default"
+								worker-src blob:"
 Header append Vary Accept env=REQUEST_image
 Header add Cross-Origin-Embedder-Policy "require-corp"
 Header add Cross-Origin-Opener-Policy "same-origin"
 Header add Cross-Origin-Resource-Policy "same-origin"
+
+# Block hidden files and folders (.env, .git, etc.) except .well-known
+RedirectMatch 404 /\.(?!well-known)
 
 # Allow well-known checks
 RewriteRule /\.well-known|^\.well-known - [L]
@@ -43,30 +44,29 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # www redirect
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
 
 # MIME types
 AddType image/x-icon .ico
 AddType image/webp .webp
+AddType application/manifest+json .webmanifest
 
-# If WebP accepted and exists
-RewriteCond %{HTTP_ACCEPT} image/webp
-RewriteCond %{REQUEST_URI}  (.*)\.(png)$
-RewriteCond %{DOCUMENT_ROOT}%1.webp -f
-RewriteRule (.+)\.(png)$ $1.webp [T=image/webp,E=REQUEST_image]
-
-# Etag
-FileETag MTime Size
+# Compress text formats the server-wide config misses
+<IfModule mod_filter.c>
+	AddOutputFilterByType DEFLATE image/svg+xml image/x-icon application/manifest+json application/ld+json
+</IfModule>
 
 # If WebP accepted and exists
 RewriteCond %{HTTP_ACCEPT} image/webp
 RewriteCond %{REQUEST_URI}  (.*)\.(jpe?g|png)$
 RewriteCond %{DOCUMENT_ROOT}%1.webp -f
-RewriteRule (.+)\.(jpe?g)$ $1.webp [T=image/webp,E=REQUEST_image]
+RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=REQUEST_image]
+
+# Etag
+FileETag MTime Size
 
 # Redirect requests to index.php
 RewriteCond %{REQUEST_URI} !=/index.php
-RewriteCond %{REQUEST_URI} !/ajax/.* [NC]
 RewriteCond %{REQUEST_URI} !.*\.css$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.js$ [NC]
 RewriteCond %{REQUEST_URI} !.*\.jpe?g$ [NC]

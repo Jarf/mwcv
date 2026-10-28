@@ -1,32 +1,32 @@
 <?php
 define('DIR_ROOT', dirname(__DIR__) . '/');
-define('DIR_INCLUDE', DIR_ROOT . 'include/');
 define('DIR_VENDOR', DIR_ROOT . 'vendor/');
 define('DIR_CLASSES', DIR_ROOT . 'classes/');
 define('DIR_TPL', DIR_ROOT . 'tpl/');
-define('DIR_CACHE', false);
 define('DIR_CSS', DIR_ROOT . 'css/');
-define('DIR_IMG', DIR_ROOT . 'img/');
 
 define('SITE_CSS', '/css/');
-define('SITE_VENDOR', '/vendor/');
-define('SITE_AJAX', '/ajax/');
-define('SITE_ICO', '/ico/');
 define('SITE_FONTS', '/fonts/');
 define('SITE_IMG', '/img/');
 
-define('DB_USER', 'cv');
-define('DB_PASS', 'WNPKCkSGOnIw5DJ4');
-define('DB_NAME', 'cv');
-define('DB_HOST', 'localhost');
-define('DB_TYPE', 'mysql');
-
-define('CACHEBUSTER', substr(trim(file_get_contents(DIR_ROOT . '.git/refs/heads/master')),0,6));
+$env = parse_ini_file(DIR_ROOT . '.env', false, INI_SCANNER_RAW);
+if ($env === false) {
+	error_log('Missing or unreadable .env file');
+	http_response_code(500);
+	exit('Server configuration error');
+}
+define('DB_USER', $env['DB_USER'] ?? '');
+define('DB_PASS', $env['DB_PASS'] ?? '');
+define('DB_NAME', $env['DB_NAME'] ?? '');
+define('DB_HOST', $env['DB_HOST'] ?? 'localhost');
+define('DB_TYPE', $env['DB_TYPE'] ?? 'mysql');
+unset($env);
 
 $dev = 0;
 
 if(isset($_SERVER['SERVER_NAME'])){
 	$servername = $_SERVER['SERVER_NAME'];
+	$dev = $servername === 'mwcv.local' ? 1 : 0;
 }else{
 	switch (gethostname()) {
 		case 'localhost':
@@ -41,6 +41,8 @@ if(isset($_SERVER['SERVER_NAME'])){
 }
 
 define('ISDEV', $dev);
+// Compiled Twig templates; disabled in dev so template edits show immediately
+define('DIR_CACHE', ISDEV ? false : DIR_ROOT . 'cache/twig/');
 
 $https = false;
 if(isset($_SERVER['HTTPS'])){

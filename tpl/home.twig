@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-	<script>
-		if (window.trustedTypes && window.trustedTypes.createPolicy) {
-			window.trustedTypes.createPolicy('default', {
-				createHTML: string => string,
-				createScriptURL: string => string,
-				createScript: string => string
-			});
-		}
-	</script>
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		{%include('favico.twig')%}
 		<title>Martin Wadeson</title>
-		<meta name="description" content="Experienced web developer and server architect with over 13 years of professional experience in web/system development and server architecture"/>
+		<meta name="description" content="Experienced web developer and server architect with over {{years_experience}} years of professional experience in web/system development and server architecture"/>
 		<meta property="og:title" content="MartinWadeson.com"/>
-		<meta property="og:description" content="Experienced web developer and server architect with over 13 years of professional experience"/>
+		<meta property="og:description" content="Experienced web developer and server architect with over {{years_experience}} years of professional experience"/>
 		<meta property="og:image" content="https://martinwadeson.com/img/ogimage.png"/>
 		<meta property="og:image:width" content="1200"/>
 		<meta property="og:image:height" content="630"/>
@@ -47,53 +38,56 @@
 			"@type" : "Person",
 			"name" : "Martin Wadeson",
 			"url" : "{{constant('SITE_ROOT')}}",
-			"alternateName" : "Jarf"
+			"alternateName" : "Jarf",
+			"jobTitle" : "Full-Stack Developer",
+			"sameAs" : [
+				"https://github.com/Jarf",
+				"https://www.linkedin.com/in/martin-wadeson-a936a922/"
+			]
 		}
 		</script>
-		<style>
-			{{inlinecss|raw}}
-		</style>
+		<link rel="stylesheet" href="{{constant('SITE_CSS')}}main.css?v={{cssversion}}"/>
 	</head>
 	<body>
 		<div id="container">
-			<div id="starfield">
+			<div id="starfield" aria-hidden="true">
 				<div class="stars"></div>
 				<div class="stars2"></div>
 				<div class="stars3"></div>
 			</div>
 			<div id="scroller">
-				<h1>
-					<span>W</span>
-					<span>E</span>
-					<span>L</span>
-					<span>C</span>
-					<span>O</span>
-					<span>M</span>
-					<span>E</span>
-					<span>&nbsp;</span>
-					<span>T</span>
-					<span>O</span>
-					<span>&nbsp;</span>
-					<span>M</span>
-					<span>A</span>
-					<span>R</span>
-					<span>T</span>
-					<span>I</span>
-					<span>N</span>
-					<span>W</span>
-					<span>A</span>
-					<span>D</span>
-					<span>E</span>
-					<span>S</span>
-					<span>O</span>
-					<span>N</span>
-					<span>.</span>
-					<span>C</span>
-					<span>O</span>
-					<span>M</span>
+				<h1 aria-label="Welcome to MartinWadeson.com">
+					<span aria-hidden="true">W</span>
+					<span aria-hidden="true">E</span>
+					<span aria-hidden="true">L</span>
+					<span aria-hidden="true">C</span>
+					<span aria-hidden="true">O</span>
+					<span aria-hidden="true">M</span>
+					<span aria-hidden="true">E</span>
+					<span aria-hidden="true">&nbsp;</span>
+					<span aria-hidden="true">T</span>
+					<span aria-hidden="true">O</span>
+					<span aria-hidden="true">&nbsp;</span>
+					<span aria-hidden="true">M</span>
+					<span aria-hidden="true">A</span>
+					<span aria-hidden="true">R</span>
+					<span aria-hidden="true">T</span>
+					<span aria-hidden="true">I</span>
+					<span aria-hidden="true">N</span>
+					<span aria-hidden="true">W</span>
+					<span aria-hidden="true">A</span>
+					<span aria-hidden="true">D</span>
+					<span aria-hidden="true">E</span>
+					<span aria-hidden="true">S</span>
+					<span aria-hidden="true">O</span>
+					<span aria-hidden="true">N</span>
+					<span aria-hidden="true">.</span>
+					<span aria-hidden="true">C</span>
+					<span aria-hidden="true">O</span>
+					<span aria-hidden="true">M</span>
 				</h1>
 			</div>
-			<div id="cube">
+			<div id="cube" aria-hidden="true">
 				<div class="scene">
 					<div class="cube">
 						<div class="face front"></div>
@@ -105,36 +99,36 @@
 					</div>
 				</div>
 			</div>
-			<div id="ansi">
+			<div id="ansi" aria-hidden="true">
 				<div class="scene">
 					<span>█</span><span>█</span><span>█</span><span> </span><span> </span><span> </span><span> </span><span>█</span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span> </span><span> </span><span> </span><span> </span><span> </span><span>█</span><span>█</span><span> </span><br/><span>█</span><span>█</span><span>█</span><span>█</span><span> </span><span> </span><span>█</span><span>█</span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span> </span><span> </span><span> </span><span> </span><span> </span><span>█</span><span>█</span><span> </span><br/><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span> </span><span> </span><span>█</span><span> </span><span> </span><span>█</span><span>█</span><span> </span><br/><span>█</span><span>█</span><span> </span><span> </span><span>█</span><span>█</span><span> </span><span> </span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span> </span><br/><span>█</span><span>█</span><span> </span><span> </span><span> </span><span> </span><span> </span><span> </span><span>█</span><span>█</span><span> </span><span> </span><span>█</span><span>█</span><span>█</span><span> </span><span>█</span><span>█</span><span>█</span><span> </span><span> </span>
 				</div>
 			</div>
 			<div id="content" role="main">
-				<input type="radio" id="page1" name="pageSelector"/>
-				<input type="radio" id="page2" name="pageSelector"/>
-				<input type="radio" id="page3" name="pageSelector"/>
-				<input type="radio" id="page4" name="pageSelector"/>
+				<input type="radio" id="page1" aria-label="About me" name="pageSelector"/>
+				<input type="radio" id="page2" aria-label="Work projects" name="pageSelector"/>
+				<input type="radio" id="page3" aria-label="Personal projects" name="pageSelector"/>
+				<input type="radio" id="page4" aria-label="Socials" name="pageSelector"/>
 				<div id="pagesContainer">
 					<div class="pageContainer page1">
 						<div class="pageContent">
-							<p class="header glitch" data-text="Hello World!">Hello World!</p>
+							<p class="header">Hello World!</p>
 							<p>I'm a full-stack developer with over {{years_experience}} years of professional experience in web/system development and server architecture.</p>
 							<p>My main tools include (but aren't limited to) PHP, Javascript and MySQL.</p>
 							<p>I've turned many ideas into practice. Refactored many legacy systems. Optimised and debugged many problems.</p>
-							<label class="arrowDown" for="page2"></label>
+							<label class="arrowDown" for="page2" aria-hidden="true"></label>
 						</div>
 					</div>
 					<div class="pageContainer page2">
 						<div class="pageContent">
-							<label class="arrowUp" for="page1"></label>
+							<label class="arrowUp" for="page1" aria-hidden="true"></label>
 							<p>Here are some things I've created* through my years of working on Stuff™</p>
-							<input type="radio" id="slide1pro" checked name="slideProSelector"/>
-							<input type="radio" id="slide2pro" name="slideProSelector"/>
-							<input type="radio" id="slide3pro" name="slideProSelector"/>
+							<input type="radio" id="slide1pro" aria-label="MoneySuperMarket" checked name="slideProSelector"/>
+							<input type="radio" id="slide2pro" aria-label="BettingOdds" name="slideProSelector"/>
+							<input type="radio" id="slide3pro" aria-label="St John Ambulance" name="slideProSelector"/>
 							<div class="showcase" id="showcasePro">
 								<div class="slideContainer">
-									<label></label>
+									<span></span>
 									<div class="slide">
 										<img src="{{constant('SITE_IMG')}}msm.svg" width="468" height="187" loading="lazy" alt="MoneySuperMarket"/>
 										<div class="text">
@@ -143,10 +137,10 @@
 											<p>The resulting listings were converted to a standardised format and returned to be displayed on the website/emails/etc.</p>
 										</div>
 									</div>
-									<label class="arrowRight" for="slide2pro"></label>
+									<label class="arrowRight" for="slide2pro" aria-hidden="true"></label>
 								</div>
 								<div class="slideContainer">
-									<label class="arrowLeft" for="slide1pro"></label>
+									<label class="arrowLeft" for="slide1pro" aria-hidden="true"></label>
 									<div class="slide">
 										<img src="{{constant('SITE_IMG')}}bet.svg" width="468" height="70" loading="lazy" alt="BettingOdds"/>
 										<div class="text">
@@ -157,10 +151,10 @@
 											<p>Automatically prioritising the retrieval and update of priority events (e.g. live events currently taking place).</p>
 										</div>
 									</div>
-									<label class="arrowRight" for="slide3pro"></label>
+									<label class="arrowRight" for="slide3pro" aria-hidden="true"></label>
 								</div>
 								<div class="slideContainer">
-									<label class="arrowLeft" for="slide2pro"></label>
+									<label class="arrowLeft" for="slide2pro" aria-hidden="true"></label>
 									<div class="slide">
 										<img src="{{constant('SITE_IMG')}}stj.svg" width="468" height="176" loading="lazy" alt="St John's Ambulance"/>
 										<div class="text">
@@ -169,22 +163,22 @@
 											<p>Massive user migrations onto new systems including deployment of new email domains, software licenses and authentication methods.</p>
 										</div>
 									</div>
-									<label></label>
+									<span></span>
 								</div>
 							</div>
 							<p class="small">*it's entirely possible these have changed since my time working on them, feel free to ask me more about it</p>
-							<label class="arrowDown" for="page3"></label>
+							<label class="arrowDown" for="page3" aria-hidden="true"></label>
 						</div>
 					</div>
 					<div class="pageContainer page3">
 						<div class="pageContent">
-							<label class="arrowUp" for="page2"></label>
+							<label class="arrowUp" for="page2" aria-hidden="true"></label>
 							<p>And here are some personal projects that I've created for myself but share with the world.</p>
-							<input type="radio" id="slide1per" checked name="slidePerSelector"/>
-							<input type="radio" id="slide2per" name="slidePerSelector"/>
+							<input type="radio" id="slide1per" aria-label="CDDA Story Browser" checked name="slidePerSelector"/>
+							<input type="radio" id="slide2per" aria-label="ArenaDekt" name="slidePerSelector"/>
 							<div class="showcase" id="showcasePer">
 								<div class="slideContainer">
-									<label></label>
+									<span></span>
 									<div class="slide">
 										<img src="{{constant('SITE_IMG')}}cddastory.png" width="460" height="460" loading="lazy" alt="CDDA Story Browser"/>
 										<div class="text">
@@ -193,29 +187,29 @@
 											<p>I've created a system that parses through the game files to retrieve these snippets of lore for easy viewing via the website.</p>
 										</div>
 									</div>
-									<label class="arrowRight" for="slide2per"></label>
+									<label class="arrowRight" for="slide2per" aria-hidden="true"></label>
 								</div>
 								<div class="slideContainer">
-									<label class="arrowLeft" for="slide1per"></label>
+									<label class="arrowLeft" for="slide1per" aria-hidden="true"></label>
 									<div class="slide">
 										<img src="{{constant('SITE_IMG')}}arenadekt.png" width="460" height="460" loading="lazy" alt="ArenaDekt"/>
 										<div class="text">
 											<p><a href="https://arenadekt.jarfjam.co.uk/" target="_blank">ArenaDekt</a></p>
 											<p>I play Magic: The Gathering with friends and wanted a way to convert my physical paper decks stored on <a href="https://archidekt.com/folders/578699" target="_blank" rel="noreferrer">Archidekt</a> to the historic brawl format in the digital game.</p>
 											<p>Using data from the <a href="https://scryfall.com/docs/api" target="_blank" rel="noreferrer">Scryfall API</a> I compare the two.</p>
-											<p>Upon completion it will list the cards that had to be removed due to format rulings/availabilty and also list those that were replaced with the digital equivalent of the original card.</p>
+											<p>Upon completion it will list the cards that had to be removed due to format rulings/availability and also list those that were replaced with the digital equivalent of the original card.</p>
 											<p>The output is then sent to the clipboard where it can be pasted into the digital game to create a new deck.</p>
 										</div>
 									</div>
 								</div>
 							</div>
-							<label class="arrowDown" for="page4"></label>
+							<label class="arrowDown" for="page4" aria-hidden="true"></label>
 						</div>
 					</div>
 					<div class="pageContainer page4">
 						<div class="pageContent">
-							<label class="arrowUp" for="page3"></label>
-							<p class="header glitch" data-text="Socials">Socials</p>
+							<label class="arrowUp" for="page3" aria-hidden="true"></label>
+							<p class="header">Socials</p>
 							<div id="socialsContainer">
 								<a href="https://github.com/Jarf" target="_blank"><img height="120" width="120" src="{{constant('SITE_IMG')}}github.svg" loading="lazy" alt="GitHub logo"/><p>GitHub</p></a>
 								<a href="https://www.linkedin.com/in/martin-wadeson-a936a922/" target="_blank"><img height="120" width="120" src="{{constant('SITE_IMG')}}linkedin.svg" loading="lazy" alt="LinkedIn logo"/><p>LinkedIn</p></a>
@@ -228,4 +222,5 @@
 				You are visitor {{visitorcount}}
 			</div>
 		</div>
+	</body>
 </html>
