@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Deploy master to the live server, build it, smoke-test it, and roll back on failure.
 #
-# Usage: ./deploy.sh
+# Usage: ./deploy.sh          deploy
+#        ./deploy.sh --check  smoke-test the live site only
 #
 # Keep this script up to date: when a change needs a new server step (a new
 # .env key, folder, build step, cron job or check), add it here in the same commit.
@@ -16,6 +17,54 @@ cd "$(dirname "$0")"
 
 fail() { echo "✗ $*" >&2; exit 1; }
 ok() { echo "✓ $*"; }
+
+# --- Smoke test ---------------------------------------------------------------
+
+# Contains "bot" so the visitor counter skips it
+UA="mwcv-deploy-bot"
+HEADERS=$(mktemp)
+trap 'rm -f "$HEADERS"' EXIT
+
+check() { # path expected_status [header_regex] [body_regex]
+	local body code
+	body=$(curl -s --compressed -D "$HEADERS" -A "$UA" "$SITE$1") || return 1
+	code=$(head -1 "$HEADERS" | awk '{print $2}')
+	[ "$code" = "$2" ] || { echo "  $1 returned $code, expected $2" >&2; return 1; }
+	if [ -n "${3:-}" ] && ! grep -qiE "$3" "$HEADERS"; then
+		echo "  $1 missing header /$3/" >&2; return 1
+	fi
+	if [ -n "${4:-}" ] && ! grep -qE "$4" <<<"$body"; then
+		echo "  $1 body missing /$4/" >&2; return 1
+	fi
+}
+
+smoke_test() {
+	local css size
+	check / 200 '^content-security-policy: default-src .none.*connect-src .self.' '<h1>Martin Wadeson</h1>' || return 1
+	size=$(curl -s -o /dev/null -w '%{size_download}' -H 'Accept-Encoding: gzip' -A "$UA" "$SITE/")
+	[ "$size" -lt 12000 ] || { echo "  / isn't compressed ($size bytes)" >&2; return 1; }
+	css=$(curl -s -A "$UA" "$SITE/" | grep -oE '/css/main\.css\?v=[0-9a-f]+') || { echo "  No stylesheet link" >&2; return 1; }
+	check "$css" 200 '^cache-control: max-age=31536000' &&
+	check /counter.svg 200 '^cache-control: no-store' '<svg' &&
+	check /counter.php 404 &&
+	check /nope 404 '' 'Game over' &&
+	check /index.html 301 &&
+	check /llms.txt 200 '' '^# Martin Wadeson' &&
+	check /sitemap.xml 200 '' '<lastmod>' &&
+	check /robots.txt 200 &&
+	check /.env 404 &&
+	check /.git/config 404 &&
+	check /deploy.sh 404 &&
+	check /build.php 404 &&
+	check /data/cv.php 404 &&
+	check /vendor/autoload.php 404
+}
+
+# ./deploy.sh --check runs only the smoke test against the live site
+if [ "${1:-}" = "--check" ]; then
+	smoke_test && ok "Live site passes smoke test" || fail "Live site fails smoke test"
+	exit 0
+fi
 
 # --- Local checks -----------------------------------------------------------
 
@@ -96,47 +145,7 @@ apache2ctl configtest 2>&1 | grep -q 'Syntax OK' || { echo "✗ Apache config te
 echo "✓ Apache config"
 REMOTE
 
-# --- Smoke test, with rollback on failure -------------------------------------
-
-# Contains "bot" so the visitor counter skips it
-UA="mwcv-deploy-bot"
-HEADERS=$(mktemp)
-trap 'rm -f "$HEADERS"' EXIT
-
-check() { # path expected_status [header_regex] [body_regex]
-	local body code
-	body=$(curl -s --compressed -D "$HEADERS" -A "$UA" "$SITE$1") || return 1
-	code=$(head -1 "$HEADERS" | awk '{print $2}')
-	[ "$code" = "$2" ] || { echo "  $1 returned $code, expected $2" >&2; return 1; }
-	if [ -n "${3:-}" ] && ! grep -qiE "$3" "$HEADERS"; then
-		echo "  $1 missing header /$3/" >&2; return 1
-	fi
-	if [ -n "${4:-}" ] && ! grep -qE "$4" <<<"$body"; then
-		echo "  $1 body missing /$4/" >&2; return 1
-	fi
-}
-
-smoke_test() {
-	local css size
-	check / 200 '^content-security-policy: default-src .none.' '<h1>Martin Wadeson</h1>' || return 1
-	size=$(curl -s -o /dev/null -w '%{size_download}' -H 'Accept-Encoding: gzip' -A "$UA" "$SITE/")
-	[ "$size" -lt 12000 ] || { echo "  / isn't compressed ($size bytes)" >&2; return 1; }
-	css=$(curl -s -A "$UA" "$SITE/" | grep -oE '/css/main\.css\?v=[0-9a-f]+') || { echo "  No stylesheet link" >&2; return 1; }
-	check "$css" 200 '^cache-control: max-age=31536000' &&
-	check /counter.svg 200 '^cache-control: no-store' '<svg' &&
-	check /counter.php 404 &&
-	check /nope 404 '' 'Game over' &&
-	check /index.html 301 &&
-	check /llms.txt 200 '' '^# Martin Wadeson' &&
-	check /sitemap.xml 200 '' '<lastmod>' &&
-	check /robots.txt 200 &&
-	check /.env 404 &&
-	check /.git/config 404 &&
-	check /deploy.sh 404 &&
-	check /build.php 404 &&
-	check /data/cv.php 404 &&
-	check /vendor/autoload.php 404
-}
+# --- Smoke test the deploy, rolling back on failure ----------------------------
 
 if smoke_test; then
 	ok "Live site passes smoke test"
