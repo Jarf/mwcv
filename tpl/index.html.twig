@@ -48,9 +48,9 @@
 			{%- for row in logo %}{% for char in row|split('') %}<span>{{ char == '█' ? '█' }}</span>{% endfor %}{% endfor -%}
 		</div>
 	</div>
-	<audio class="tune" controls preload="none" aria-label="Theme tune: Orbit Rush, 8-bit chiptune">
-		<source src="/orbit-rush.opus" type="audio/ogg; codecs=opus">
-		<source src="/orbit-rush.m4a" type="audio/mp4">
+	<audio class="welcome" controls preload="none" aria-label="Spoken welcome: Welcome to martinwadeson.com">
+		<source src="/welcome.opus" type="audio/ogg; codecs=opus">
+		<source src="/welcome.m4a" type="audio/mp4">
 	</audio>
 	<h1>{{ cv.name }}</h1>
 	<p class="class-line">{{ cv.job_title }}<span class="sep"> · </span><span>PHP · APIs · Databases</span></p>

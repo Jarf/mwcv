@@ -60,8 +60,8 @@ smoke_test() {
 	check /llms.txt 200 '' '^# Martin Wadeson' &&
 	check /sitemap.xml 200 '' '<lastmod>' &&
 	check /robots.txt 200 &&
-	check_head /orbit-rush.opus 200 '^content-type: audio/ogg' &&
-	check_head /orbit-rush.m4a 200 '^content-type: audio/mp4' &&
+	check_head /welcome.opus 200 '^content-type: audio/ogg' &&
+	check_head /welcome.m4a 200 '^content-type: audio/mp4' &&
 	check /.env 404 &&
 	check /.git/config 404 &&
 	check /deploy.sh 404 &&
