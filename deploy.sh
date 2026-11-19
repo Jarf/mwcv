@@ -38,6 +38,14 @@ check() { # path expected_status [header_regex] [body_regex]
 	fi
 }
 
+check_head() { # path expected_status header_regex
+	local code
+	curl -sI -A "$UA" "$SITE$1" > "$HEADERS" || return 1
+	code=$(head -1 "$HEADERS" | awk '{print $2}')
+	[ "$code" = "$2" ] || { echo "  $1 returned $code, expected $2" >&2; return 1; }
+	grep -qiE "$3" "$HEADERS" || { echo "  $1 missing header /$3/" >&2; return 1; }
+}
+
 smoke_test() {
 	local css size
 	check / 200 '^content-security-policy: default-src .none.*connect-src .self.' '<h1>Martin Wadeson</h1>' || return 1
@@ -52,6 +60,8 @@ smoke_test() {
 	check /llms.txt 200 '' '^# Martin Wadeson' &&
 	check /sitemap.xml 200 '' '<lastmod>' &&
 	check /robots.txt 200 &&
+	check_head /orbit-rush.opus 200 '^content-type: audio/ogg' &&
+	check_head /orbit-rush.m4a 200 '^content-type: audio/mp4' &&
 	check /.env 404 &&
 	check /.git/config 404 &&
 	check /deploy.sh 404 &&

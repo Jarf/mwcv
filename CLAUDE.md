@@ -18,9 +18,9 @@ Every change should keep the site **performant, lightweight, secure and SEO/GEO 
 | `tpl/` | `index.html.twig` (the page), `404.html.twig`, `llms.txt.twig`, `sitemap.xml.twig` |
 | `build.php` | Writes `public/index.html`, `404.html`, `llms.txt` and `sitemap.xml` (gitignored). Runs on deploy and daily by cron. |
 | `scss/main.scss` | Styles, compiled to `public/css/main.css` (committed) |
-| `public/` | Web root: CSS, font, images, icons, `.htaccess`, `robots.txt`, `counter.php` |
+| `public/` | Web root: CSS, font, images, icons, theme tune (`orbit-rush.opus`/`.m4a`, a native `<audio>` under the cube, `preload="none"`), `.htaccess`, `robots.txt`, `counter.php` |
 | `assets/` | Sources not served: full font, original screenshots |
-| `tools/` | `make-stars.php` (starfield tile), `subset-font.sh` and `font-unicodes.txt` (font subset) |
+| `tools/` | `make-stars.php` (starfield tile), `subset-font.sh` and `font-unicodes.txt` (font subset), `orbit-rush/` (6502 source and `build.sh` for the theme tune) |
 | `include/config.php`, `classes/db.php` | `.env` loading and the DB class, used only by the counter |
 
 Each heading pairs an arcade label with a plain one (`Player 1 · Profile`). Screens show both; print shows only the plain label, so printing the page gives a plain CV.

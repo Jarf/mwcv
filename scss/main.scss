@@ -230,6 +230,14 @@ h3 {
   perspective: 600px;
 }
 
+// Theme tune: the browser's own controls, so no script is needed
+.tune {
+  width: 240px;
+  max-width: 100%;
+  height: 40px;
+  margin-top: 16px;
+}
+
 .cube {
   position: absolute;
   inset: 0;
@@ -787,6 +795,10 @@ main {
     background: $white;
     color: $black;
     font: 11pt/1.45 Georgia, serif;
+  }
+
+  .tune {
+    display: none;
   }
 
   .print-only {

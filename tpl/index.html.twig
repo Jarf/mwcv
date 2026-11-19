@@ -48,6 +48,10 @@
 			{%- for row in logo %}{% for char in row|split('') %}<span>{{ char == '█' ? '█' }}</span>{% endfor %}{% endfor -%}
 		</div>
 	</div>
+	<audio class="tune" controls preload="none" loop aria-label="Theme tune: Orbit Rush, 8-bit chiptune">
+		<source src="/orbit-rush.opus" type="audio/ogg; codecs=opus">
+		<source src="/orbit-rush.m4a" type="audio/mp4">
+	</audio>
 	<h1>{{ cv.name }}</h1>
 	<p class="class-line">{{ cv.job_title }}<span class="sep"> · </span><span>PHP · APIs · Databases</span></p>
 	<p class="print-only">{{ cv.location }} · {{ cv.email }} · {{ cv.url|trim('/', 'right')|replace({'https://': ''}) }}</p>
